@@ -1,0 +1,18 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/forms";
+
+@theme {
+  --color-primary: #1565c0;
+  --color-primary-dark: #0d47a1;
+  --color-primary-bright: #00b0ff;
+  --color-surface: #080c14;
+  --color-surface-container-low: #0d1422;
+  --color-surface-container: #111a2e;
+  --color-surface-container-high: #162040;
+  --color-surface-container-highest: #1c2a50;
+  --color-surface-container-lowest: #0d1422;
+  --color-on-surface: #ffffff;
+  --color-on-surface-variant: rgba(255,255,255,0.55);
+  --font-display: "Hanken Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+}
