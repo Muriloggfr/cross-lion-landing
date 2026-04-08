@@ -456,7 +456,16 @@
       display: flex; flex-direction: column;
       justify-content: flex-start; padding-top: 20px;
     }
-    .cf-header { margin-bottom: 20px; }
+    /* Propagate flex height through intermediate containers */
+    #cf-sticky > .cx {
+      display: flex; flex-direction: column;
+      flex: 1; min-height: 0; height: 100%;
+    }
+    #cf-sticky .cf-steps-wrap {
+      display: flex; flex-direction: column;
+      flex: 1; min-height: 0;
+    }
+    .cf-header { margin-bottom: 20px; flex-shrink: 0; }
     .cf-steps-grid {
       display: block; position: relative;
       overflow: hidden; border-radius: 20px;
@@ -473,8 +482,8 @@
       box-shadow: 0 24px 56px rgba(0,0,0,0.55);
     }
     #cf-step-1 { z-index: 11; }
-    #cf-step-2 { z-index: 12; }
-    #cf-step-3 { z-index: 13; }
+    #cf-step-2 { z-index: 12; transform: translateY(100%); }
+    #cf-step-3 { z-index: 13; transform: translateY(100%); }
     .cf-step-img { height: 42%; margin-bottom: 12px; }
     .cf-badge-row { height: 32px; margin-bottom: 10px; }
     .cf-badge {
