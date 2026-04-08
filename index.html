@@ -147,7 +147,14 @@
   #hero { min-height: 100vh; display: flex; align-items: flex-start; }
   @media (min-width: 1024px) { #hero { align-items: center; } }
   @media (max-width: 639px) {
-    #hero .btn-photo, #hero .btn-wa-outline { justify-content: center; }
+    #hero .btn-photo { justify-content: center; }
+  }
+  /* Hero mobile — reduce vertical spacing so CTAs stay on screen */
+  @media (max-width: 1023px) {
+    #hero .cx.grid { padding-top: 1.5rem !important; padding-bottom: 2.5rem !important; }
+    #hero p.max-w-sm { margin-bottom: 1.25rem !important; }
+    #hero .hero-mobile-badges { margin-bottom: 1rem !important; }
+    #hero .flex.flex-col { margin-bottom: 1.25rem !important; }
   }
   #hero-bg-img { position: absolute; inset: 0; z-index: 0; }
   #hero-bg-img img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
@@ -174,6 +181,28 @@
   /* Benefit card */
   .benefit-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
   .benefit-card:hover { transform: translateY(-8px); box-shadow: 0 16px 40px rgba(0,0,0,0.09); }
+
+  /* Comunidade section — 2-col desktop, stacked mobile (title → videos → testimonials) */
+  @media (min-width: 1024px) {
+    #comunidade-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 64px;
+      row-gap: 40px;
+      align-items: start;
+    }
+    .com-videos-wrap { grid-column: 1; grid-row: 1 / 3; align-self: center; }
+    .com-title-wrap  { grid-column: 2; grid-row: 1; }
+    .com-testimonials-wrap { grid-column: 2; grid-row: 2; }
+    .com-title-h2 { margin-bottom: 0; }
+  }
+  @media (max-width: 1023px) {
+    #comunidade-grid { display: flex; flex-direction: column; gap: 2rem; }
+    .com-title-wrap  { order: 1; }
+    .com-videos-wrap { order: 2; }
+    .com-testimonials-wrap { order: 3; }
+    .com-title-h2 { margin-bottom: 0 !important; }
+  }
 
   /* Testimonial — glassmorphism consistente com stat cards */
   .testimonial-card {
@@ -507,6 +536,13 @@
     color: rgba(255,255,255,0.50);
   }
 
+  /* Form inputs — placeholder sempre visível */
+  #contact-form input::placeholder,
+  #contact-form textarea::placeholder {
+    color: rgba(255,255,255,0.42);
+    opacity: 1;
+  }
+
   /* ── Badge pulsante ── */
   .pulse-badge {
     display: inline-flex; align-items: center; gap: 8px;
@@ -611,7 +647,7 @@
   @media (max-width: 768px) {
     .stat-item { border-right: none !important; border-bottom: none !important; }
 
-    /* Wrapper do grid vira carrossel */
+    /* Wrapper do grid vira carrossel — estende até as bordas da tela */
     #metodo .reveal > div:last-child {
       display: flex !important;
       grid-template-columns: unset !important;
@@ -619,18 +655,26 @@
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
       gap: 12px !important;
-      padding: 4px 0 16px;
-      /* esconde scrollbar mas mantém funcionalidade */
+      padding: 4px 40px 16px;
+      margin-left: -40px !important;
+      margin-right: -40px !important;
       scrollbar-width: none;
     }
     #metodo .reveal > div:last-child::-webkit-scrollbar { display: none; }
 
-    /* Cada card ocupa ~78vw para o próximo aparecer "espiadinho" */
+    /* Cada card ocupa ~80vw para o próximo aparecer "espiadinho" */
     #metodo .reveal > div:last-child .stat-item {
-      flex: 0 0 78vw !important;
-      width: 78vw !important;
+      flex: 0 0 80vw !important;
+      width: 80vw !important;
       scroll-snap-align: start;
-      animation: none !important; /* pausa float no mobile para performance */
+      animation: none !important;
+    }
+  }
+  @media (max-width: 639px) {
+    #metodo .reveal > div:last-child {
+      padding: 4px 20px 16px;
+      margin-left: -20px !important;
+      margin-right: -20px !important;
     }
   }
 
@@ -1315,10 +1359,6 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </span>
         </a>
-        <a href="#" target="_blank" class="btn-wa-outline">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          Falar no WhatsApp
-        </a>
       </div>
       <div class="flex items-center gap-4">
         <div class="flex -space-x-3">
@@ -1426,8 +1466,14 @@
 
 <!-- COMUNIDADE -->
 <section id="comunidade" class="py-32">
-  <div class="cx grid lg:grid-cols-2 items-center" style="column-gap:64px;row-gap:64px;position:relative;z-index:1;">
-    <div class="order-2 lg:order-1 relative reveal">
+  <div class="cx" id="comunidade-grid" style="position:relative;z-index:1;">
+    <!-- Title: order 1 on mobile | col 2 row 1 on desktop -->
+    <div class="com-title-wrap reveal reveal-delay-1">
+      <span class="text-primary font-bold tracking-[0.2em] uppercase text-[0.6875rem] mb-4 block">Comunidade Real</span>
+      <h2 class="font-display text-4xl lg:text-5xl font-extrabold tracking-tight com-title-h2">Aqui você <span class="gradient-rainbow">não treina sozinho</span>. E isso muda tudo.</h2>
+    </div>
+    <!-- Videos: order 2 on mobile | col 1 rows 1–2 on desktop -->
+    <div class="com-videos-wrap relative reveal">
       <div class="grid grid-cols-2 gap-4">
         <div class="img-rounded aspect-square overflow-hidden shadow-lg">
           <div class="w-full h-full flex items-center justify-center" style="background:#1e1e1e;">
@@ -1454,9 +1500,8 @@
         <svg width="36" height="36" viewBox="0 0 24 24" fill="currentColor" class="text-white"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
       </div>
     </div>
-    <div class="order-1 lg:order-2 reveal reveal-delay-1">
-      <span class="text-primary font-bold tracking-[0.2em] uppercase text-[0.6875rem] mb-4 block">Comunidade Real</span>
-      <h2 class="font-display text-4xl lg:text-5xl font-extrabold tracking-tight mb-12">Aqui você <span class="gradient-rainbow">não treina sozinho</span>. E isso muda tudo.</h2>
+    <!-- Testimonials: order 3 on mobile | col 2 row 2 on desktop -->
+    <div class="com-testimonials-wrap reveal reveal-delay-1">
       <div class="space-y-6">
         <div class="testimonial-card">
           <p class="text-base italic text-on-surface mb-4">"O ambiente do Cross Lion é contagiante. Saí do sedentarismo para minha melhor forma física em 6 meses."</p>
@@ -1959,11 +2004,6 @@
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </span>
       </a>
-      <p class="text-white/40 text-sm">
-        Ou fale diretamente pelo
-        <a href="#" target="_blank"
-           class="text-white/70 underline underline-offset-4 hover:text-white transition-colors">WhatsApp</a>
-      </p>
     </div>
   </div>
 </section>
@@ -2089,13 +2129,6 @@
               <span style="font-size:0.8125rem;color:rgba(255,255,255,0.50);">(00) 00000-0000</span>
             </p>
           </address>
-          <a href="#" target="_blank" rel="noopener noreferrer" class="btn-wa" style="margin-top:0;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="white" style="position:relative;z-index:1;flex-shrink:0;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            <span class="wa-label">Falar no WhatsApp</span>
-            <span class="wa-arrow">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </span>
-          </a>
         </div>
 
       </div><!-- /grid -->
