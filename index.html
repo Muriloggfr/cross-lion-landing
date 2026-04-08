@@ -469,22 +469,23 @@
     .cf-steps-grid {
       display: block; position: relative;
       overflow: hidden; border-radius: 20px;
-      flex: 1; min-height: 0;
+      min-height: 320px; /* JS vai corrigir com altura real */
     }
     .cf-step {
-      position: absolute; inset: 0;
+      position: absolute; left: 0; right: 0; top: 0;
       opacity: 1 !important; filter: none !important;
       background: rgba(11,14,26,0.97);
       border: 1px solid rgba(255,255,255,0.08);
-      padding: 20px; overflow: hidden;
-      transform-origin: center center;
+      border-radius: 20px;
+      padding: 20px;
+      transform-origin: top center;
       will-change: transform;
-      box-shadow: 0 24px 56px rgba(0,0,0,0.55);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.50);
     }
     #cf-step-1 { z-index: 11; }
-    #cf-step-2 { z-index: 12; transform: translateY(100%); }
-    #cf-step-3 { z-index: 13; transform: translateY(100%); }
-    .cf-step-img { height: 42%; margin-bottom: 12px; }
+    #cf-step-2 { z-index: 12; transform: translateY(400px); }
+    #cf-step-3 { z-index: 13; transform: translateY(400px); }
+    .cf-step-img { height: 160px; margin-bottom: 12px; }
     .cf-badge-row { height: 32px; margin-bottom: 10px; }
     .cf-badge {
       background: linear-gradient(135deg, #1565c0, #1a7fd4) !important;
@@ -2810,14 +2811,8 @@ window.addEventListener('scroll', () => {
   const badges = ['cf-badge-1','cf-badge-2','cf-badge-3'].map(id => document.getElementById(id));
   if (!outer || !fillEl || steps.some(s => !s)) return;
 
-  // Desktop thresholds (recalculated from badge positions)
+  // ── Desktop ──────────────────────────────────────────────────
   let thresh2 = 0.36, thresh3 = 0.70;
-
-  // Mobile card-stack windows: [enterStart, enterDone]
-  const M = [[0, 0], [0.28, 0.50], [0.62, 0.84]];
-
-  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
-  function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
 
   function calcThresholds() {
     if (window.innerWidth < 1024) return;
@@ -2828,6 +2823,38 @@ window.addEventListener('scroll', () => {
     thresh3 = (badges[2].getBoundingClientRect().left - gr.left + badges[2].getBoundingClientRect().width * 0.5) / gr.width;
   }
 
+  // ── Mobile card-stack ─────────────────────────────────────────
+  const PEEK_D1 = 16;  // px que o card de profundidade-1 aparece abaixo do topo
+  const PEEK_D2 = 10;  // px que o card de profundidade-2 aparece abaixo do d1
+  const PEEK_TOTAL = PEEK_D1 + PEEK_D2;
+  let CARD_H = 0, HIDDEN = 400;
+
+  const M_START = [0, 0.28, 0.62]; // quando cada card começa a entrar
+  const M_END   = [0, 0.50, 0.84]; // quando cada card termina de entrar
+
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+  function easeOutCubic(t)   { return 1 - Math.pow(1 - t, 3); }
+
+  // translateY de um card totalmente empilhado com profundidade `d`
+  function stackedY(d) {
+    if (d <= 0) return 0;
+    if (d === 1) return PEEK_D1;
+    return PEEK_D1 + PEEK_D2;
+  }
+
+  function initMobileCards() {
+    if (window.innerWidth >= 1024) return;
+    const grid = document.querySelector('.cf-steps-grid');
+    if (!grid) return;
+    steps[0].style.transform = 'translateY(0)';
+    CARD_H = steps[0].offsetHeight;
+    HIDDEN = CARD_H + PEEK_TOTAL + 8;
+    grid.style.height = (CARD_H + PEEK_TOTAL) + 'px';
+    steps[1].style.transform = `translateY(${HIDDEN}px)`;
+    steps[2].style.transform = `translateY(${HIDDEN}px)`;
+  }
+
+  // ── Shared ────────────────────────────────────────────────────
   function getProgress() {
     const room = outer.offsetHeight - window.innerHeight;
     const scrolled = Math.max(0, -outer.getBoundingClientRect().top);
@@ -2839,45 +2866,47 @@ window.addEventListener('scroll', () => {
     steps[0].classList.add('cf-active');
     steps[1].classList.toggle('cf-active', p >= thresh2);
     steps[2].classList.toggle('cf-active', p >= thresh3);
-    // Reset any mobile inline transforms
-    steps.forEach(s => { s.style.transform = ''; });
+    steps.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
   }
 
   function updateMobile(p) {
+    if (CARD_H === 0) return;
+
+    // Card que está a entrar agora (se houver)
+    let enteringIdx = -1, enterFrac = 0;
+    for (let j = 1; j < 3; j++) {
+      if (p >= M_START[j] && p < M_END[j]) {
+        enteringIdx = j;
+        enterFrac = easeOutCubic(clamp((p - M_START[j]) / (M_END[j] - M_START[j]), 0, 1));
+        break;
+      }
+    }
+
+    // Topo após a última transição completa
+    let prevTop = 0;
+    if (p >= M_END[2]) prevTop = 2;
+    else if (p >= M_END[1]) prevTop = 1;
+    const newTop = enteringIdx >= 0 ? enteringIdx : prevTop;
+
     steps.forEach((step, i) => {
-      const [start, done] = M[i];
-      if (i === 0) {
-        // Step 1: always present, compress slightly as others stack on top
-        const topIdx = (p >= M[2][1]) ? 2 : (p >= M[1][1]) ? 1 : 0;
-        const depth = topIdx;
-        const scale = 1 - depth * 0.035;
-        const dy = depth * 10;
-        step.style.transform = `translateY(-${dy}px) scale(${scale})`;
-        step.style.opacity = depth === 0 ? '1' : (depth === 1 ? '0.70' : '0.45');
-        return;
-      }
-      if (p < start) {
-        step.style.transform = 'translateY(100%)';
-        step.style.opacity = '1';
-        return;
-      }
-      const t = clamp((p - start) / (done - start), 0, 1);
-      const eased = easeOutCubic(t);
-      if (t < 1) {
-        // Entering: slide up from bottom
-        step.style.transform = `translateY(${(1 - eased) * 100}%)`;
-        step.style.opacity = '1';
+      let y;
+      if (i === enteringIdx) {
+        // Este card está deslizando de baixo para cima
+        y = HIDDEN * (1 - enterFrac);
+      } else if (p < M_START[i] || (i > prevTop && i !== enteringIdx)) {
+        // Ainda não entrou
+        y = HIDDEN;
       } else {
-        // Fully entered — check if something is on top of it
-        const topIdx = (p >= M[2][1]) ? 2 : 1;
-        const depth = topIdx - i;
-        const scale = 1 - depth * 0.035;
-        const dy = depth * 10;
-        step.style.transform = `translateY(-${dy}px) scale(${scale})`;
-        step.style.opacity = depth === 0 ? '1' : '0.70';
+        // Totalmente empilhado — interpola da posição antiga para a nova
+        const oldDepth = prevTop - i;
+        const newDepth = newTop  - i;
+        y = (enteringIdx >= 0 && i < enteringIdx)
+          ? stackedY(oldDepth) + (stackedY(newDepth) - stackedY(oldDepth)) * enterFrac
+          : stackedY(prevTop - i);
       }
+      step.style.transform = `translateY(${y}px)`;
     });
-    // Remove desktop active classes on mobile
+
     steps.forEach(s => s.classList.remove('cf-active'));
     fillEl.style.width = '0%';
   }
@@ -2887,10 +2916,10 @@ window.addEventListener('scroll', () => {
     if (window.innerWidth < 1024) { updateMobile(p); } else { updateDesktop(p); }
   }
 
-  window.addEventListener('load',   () => { calcThresholds(); update(); });
-  window.addEventListener('resize', () => { calcThresholds(); update(); }, { passive: true });
+  window.addEventListener('load', () => { calcThresholds(); initMobileCards(); update(); });
+  window.addEventListener('resize', () => { calcThresholds(); initMobileCards(); update(); }, { passive: true });
   window.addEventListener('scroll', update, { passive: true });
-  setTimeout(() => { calcThresholds(); update(); }, 200);
+  setTimeout(() => { calcThresholds(); initMobileCards(); update(); }, 150);
 })();
 </script>
 
