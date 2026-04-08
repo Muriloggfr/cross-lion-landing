@@ -381,6 +381,92 @@
     50%       { transform: translateY(8px); }
   }
 
+  /* ── Como Funciona — scroll-jacked 3 passos ── */
+  #cf-outer { position: relative; }
+  @media (min-width: 1024px) { #cf-outer { height: 280vh; } }
+  #cf-sticky { overflow: hidden; }
+  @media (min-width: 1024px) {
+    #cf-sticky {
+      position: sticky; top: 80px;
+      height: calc(100vh - 80px);
+      display: flex; flex-direction: column; justify-content: center;
+    }
+  }
+  .cf-header { margin-bottom: 48px; }
+  .cf-steps-wrap { position: relative; }
+  .cf-track {
+    display: none;
+    position: absolute;
+    top: 240px; left: 0; right: 0;
+    height: 1.5px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 2px;
+    z-index: 0; pointer-events: none;
+  }
+  @media (min-width: 1024px) { .cf-track { display: block; } }
+  .cf-track-fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, #1565c0 0%, #42a5f5 80%, #1a7fd4 100%);
+    border-radius: 2px;
+    transition: width 80ms linear;
+  }
+  .cf-steps-grid {
+    display: grid; grid-template-columns: 1fr; gap: 48px;
+  }
+  @media (min-width: 1024px) {
+    .cf-steps-grid { grid-template-columns: repeat(3,1fr); gap: 0 40px; }
+  }
+  .cf-step {
+    display: flex; flex-direction: column;
+    transition: opacity 0.55s ease, filter 0.55s ease;
+  }
+  @media (min-width: 1024px) {
+    .cf-step { opacity: 0.22; filter: blur(0.5px); }
+    .cf-step.cf-active { opacity: 1; filter: none; }
+  }
+  .cf-step-img {
+    border-radius: 14px; overflow: hidden;
+    margin-bottom: 24px; flex-shrink: 0;
+    height: 196px; background: rgba(15,23,42,0.80);
+  }
+  @media (max-width: 1023px) { .cf-step-img { height: 200px; } }
+  .cf-step-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .cf-badge-row {
+    height: 40px; display: flex; align-items: center;
+    margin-bottom: 20px; position: relative; z-index: 2;
+  }
+  .cf-badge {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: 'Hanken Grotesk', sans-serif; font-weight: 800; font-size: 0.8125rem;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.10);
+    color: rgba(255,255,255,0.30); flex-shrink: 0;
+    transition: background 0.5s ease, color 0.5s ease, box-shadow 0.5s ease, border-color 0.5s ease;
+  }
+  .cf-step.cf-active .cf-badge {
+    background: linear-gradient(135deg, #1565c0, #1a7fd4);
+    color: #fff; border-color: transparent;
+    box-shadow: 0 0 0 4px rgba(21,101,192,0.18), 0 4px 14px rgba(21,101,192,0.35);
+  }
+  @media (max-width: 1023px) {
+    .cf-step { opacity: 1 !important; filter: none !important; }
+    .cf-badge {
+      background: linear-gradient(135deg, #1565c0, #1a7fd4) !important;
+      color: #fff !important; border-color: transparent !important;
+      box-shadow: 0 0 0 4px rgba(21,101,192,0.18), 0 4px 14px rgba(21,101,192,0.35) !important;
+    }
+  }
+  .cf-step-title {
+    font-family: 'Hanken Grotesk', sans-serif;
+    font-weight: 800; font-size: 1.4375rem;
+    color: #fff; letter-spacing: -0.02em;
+    margin-bottom: 10px; line-height: 1.2;
+  }
+  .cf-step-desc {
+    font-size: 0.9375rem; line-height: 1.72;
+    color: rgba(255,255,255,0.50);
+  }
+
   /* ── Badge pulsante ── */
   .pulse-badge {
     display: inline-flex; align-items: center; gap: 8px;
@@ -1586,81 +1672,74 @@
 
 
 
-<!-- COMO FUNCIONA — redesign com foto e chips -->
-<section class="py-24 reveal" style="overflow-x:clip;">
-  <div class="cx" style="position:relative;z-index:1;">
-    <div class="grid lg:grid-cols-2 items-center" style="column-gap:84px;row-gap:64px;">
+<!-- COMO FUNCIONA — scroll-jacked 3 passos -->
+<section id="cf-outer">
+  <div id="cf-sticky">
+    <div class="cx" style="position:relative;z-index:1;padding-top:0;padding-bottom:0;">
 
-      <!-- Coluna esquerda: foto + chips -->
-      <div class="bora-photo-col">
-        <div class="bora-photo-wrap">
-          <div class="bora-photo-frame">
-            <img src="https://placehold.co/600x800/1a1a2e/333355" alt="Aluna Cross Lion sorrindo após treino" class="bora-photo" loading="lazy"/>
-          </div>
-          <!-- Mais energia -->
-          <div class="float-chip" style="top:10.5%;right:16px;">
-            <span class="chip-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="text-white"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
-            <div><span class="chip-label">Energia</span><span class="chip-value">+35%</span></div>
-          </div>
-          <!-- Foco total -->
-          <div class="float-chip" style="top:34.5%;left:14px;">
-            <span class="chip-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
-            <div><span class="chip-label">Foco</span><span class="chip-value">Total</span></div>
-          </div>
-          <!-- Mais força -->
-          <div class="float-chip" style="top:72.2%;left:29px;">
-            <span class="chip-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><path d="M6 7v10M18 7v10M6 12h12"/><rect x="3" y="9" width="3" height="6" rx="1"/><rect x="18" y="9" width="3" height="6" rx="1"/></svg></span>
-            <div><span class="chip-label">Força</span><span class="chip-value">+25%</span></div>
-          </div>
-          <!-- Mais saúde -->
-          <div class="float-chip" style="top:84.1%;right:20px;">
-            <span class="chip-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="text-white"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span>
-            <div><span class="chip-label">Saúde</span><span class="chip-value">Melhor</span></div>
-          </div>
-        </div>
+      <div class="cf-header">
+        <span class="text-primary font-bold tracking-[0.2em] uppercase text-[0.7rem] mb-4 block">Como funciona</span>
+        <h2 class="font-display text-4xl lg:text-5xl font-extrabold tracking-tight">
+          Você aparece.<br/><span class="whitespace-nowrap">A gente cuida do resto.</span>
+        </h2>
       </div>
 
-      <!-- Coluna direita: 3 passos -->
-      <div>
-        <span class="text-primary font-bold tracking-[0.2em] uppercase text-[0.7rem] mb-5 block">Como funciona</span>
-        <h2 class="font-display text-3xl lg:text-5xl font-extrabold tracking-tight leading-[1.15] mb-12">Você aparece.<br/><span class="whitespace-nowrap">A gente cuida do resto.</span></h2>
+      <div class="cf-steps-wrap">
 
-        <div class="space-y-10">
-          <div class="flex gap-6 items-start">
-            <span class="bora-step-num gradient-rainbow">01</span>
-            <div>
-              <div class="bora-step-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-              </div>
-              <h3 class="font-display text-xl font-bold mb-2">Chegue</h3>
-              <p class="text-on-surface-variant leading-relaxed">Sem agendamento complexo. Escolha seu horário e apareça. O treino do dia já está pronto esperando por você.</p>
-            </div>
-          </div>
-          <div class="flex gap-6 items-start">
-            <span class="bora-step-num gradient-rainbow">02</span>
-            <div>
-              <div class="bora-step-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-              </div>
-              <h3 class="font-display text-xl font-bold mb-2">Treine</h3>
-              <p class="text-on-surface-variant leading-relaxed">Acompanhamento constante. Corrigimos sua postura, ajustamos a carga e garantimos que você dê o máximo com segurança.</p>
-            </div>
-          </div>
-          <div class="flex gap-6 items-start">
-            <span class="bora-step-num gradient-rainbow">03</span>
-            <div>
-              <div class="bora-step-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-              </div>
-              <h3 class="font-display text-xl font-bold mb-2">Evolua</h3>
-              <p class="text-on-surface-variant leading-relaxed">Veja seus recordes pessoais crescerem mês a mês. Em média, nossos alunos perdem de 3 a 4 kg já no primeiro mês.</p>
-            </div>
-          </div>
+        <!-- Linha de progresso (desktop) -->
+        <div class="cf-track" id="cf-track" aria-hidden="true">
+          <div class="cf-track-fill" id="cf-track-fill"></div>
         </div>
-      </div>
 
-    </div>
-  </div>
+        <div class="cf-steps-grid">
+
+          <!-- Passo 1 -->
+          <div class="cf-step" id="cf-step-1">
+            <div class="cf-step-img">
+              <img src="https://placehold.co/480x196/0f172a/1e3a8a" alt="Passo 1" loading="lazy"/>
+            </div>
+            <div class="cf-badge-row">
+              <span class="cf-badge" id="cf-badge-1">1</span>
+            </div>
+            <div>
+              <h3 class="cf-step-title">Chegue</h3>
+              <p class="cf-step-desc">Sem agendamento complexo. Escolha seu horário e apareça. O treino do dia já está pronto esperando por você.</p>
+            </div>
+          </div>
+
+          <!-- Passo 2 -->
+          <div class="cf-step" id="cf-step-2">
+            <div class="cf-step-img">
+              <img src="https://placehold.co/480x196/0f172a/1e3a8a" alt="Passo 2" loading="lazy"/>
+            </div>
+            <div class="cf-badge-row">
+              <span class="cf-badge" id="cf-badge-2">2</span>
+            </div>
+            <div>
+              <h3 class="cf-step-title">Treine</h3>
+              <p class="cf-step-desc">Acompanhamento constante. Corrigimos sua postura, ajustamos a carga e garantimos que você dê o máximo com segurança.</p>
+            </div>
+          </div>
+
+          <!-- Passo 3 -->
+          <div class="cf-step" id="cf-step-3">
+            <div class="cf-step-img">
+              <img src="https://placehold.co/480x196/0f172a/1e3a8a" alt="Passo 3" loading="lazy"/>
+            </div>
+            <div class="cf-badge-row">
+              <span class="cf-badge" id="cf-badge-3">3</span>
+            </div>
+            <div>
+              <h3 class="cf-step-title">Evolua</h3>
+              <p class="cf-step-desc">Veja seus recordes pessoais crescerem mês a mês. Em média, nossos alunos perdem de 3 a 4 kg já no primeiro mês.</p>
+            </div>
+          </div>
+
+        </div><!-- /cf-steps-grid -->
+      </div><!-- /cf-steps-wrap -->
+
+    </div><!-- /cx -->
+  </div><!-- /cf-sticky -->
 </section>
 
 <!-- ESTRUTURA -->
@@ -2682,6 +2761,49 @@ window.addEventListener('scroll', () => {
   document.querySelectorAll('video.lazy-video').forEach(function(v) {
     observer.observe(v);
   });
+})();
+
+// ── Como Funciona — scroll-jacked steps ──────────────────────
+(function () {
+  const outer  = document.getElementById('cf-outer');
+  const fillEl = document.getElementById('cf-track-fill');
+  const steps  = ['cf-step-1','cf-step-2','cf-step-3'].map(id => document.getElementById(id));
+  const badges = ['cf-badge-1','cf-badge-2','cf-badge-3'].map(id => document.getElementById(id));
+  if (!outer || !fillEl || steps.some(s => !s)) return;
+
+  let thresh2 = 0.36, thresh3 = 0.70;
+
+  function calcThresholds() {
+    if (window.innerWidth < 1024) return;
+    const gridEl   = document.querySelector('.cf-steps-grid');
+    if (!gridEl) return;
+    const gridRect = gridEl.getBoundingClientRect();
+    const b2rect   = badges[1].getBoundingClientRect();
+    const b3rect   = badges[2].getBoundingClientRect();
+    thresh2 = (b2rect.left - gridRect.left + b2rect.width * 0.5) / gridRect.width;
+    thresh3 = (b3rect.left - gridRect.left + b3rect.width * 0.5) / gridRect.width;
+  }
+
+  function update() {
+    if (window.innerWidth < 1024) {
+      steps.forEach(s => s.classList.add('cf-active'));
+      fillEl.style.width = '100%';
+      return;
+    }
+    const scrollRoom = outer.offsetHeight - window.innerHeight;
+    const scrolled   = Math.max(0, -outer.getBoundingClientRect().top);
+    const progress   = Math.min(1, scrollRoom > 0 ? scrolled / scrollRoom : 1);
+
+    fillEl.style.width = (progress * 100) + '%';
+    steps[0].classList.add('cf-active');
+    steps[1].classList.toggle('cf-active', progress >= thresh2);
+    steps[2].classList.toggle('cf-active', progress >= thresh3);
+  }
+
+  window.addEventListener('load',   () => { calcThresholds(); update(); });
+  window.addEventListener('resize', () => { calcThresholds(); update(); }, { passive: true });
+  window.addEventListener('scroll', update, { passive: true });
+  setTimeout(() => { calcThresholds(); update(); }, 200);
 })();
 </script>
 
