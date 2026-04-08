@@ -429,7 +429,6 @@
     margin-bottom: 24px; flex-shrink: 0;
     height: 196px; background: rgba(15,23,42,0.80);
   }
-  @media (max-width: 1023px) { .cf-step-img { height: 200px; } }
   .cf-step-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .cf-badge-row {
     height: 40px; display: flex; align-items: center;
@@ -448,13 +447,44 @@
     color: #fff; border-color: transparent;
     box-shadow: 0 0 0 4px rgba(21,101,192,0.18), 0 4px 14px rgba(21,101,192,0.35);
   }
+  /* Mobile: sticky card stack ──────────────────────── */
   @media (max-width: 1023px) {
-    .cf-step { opacity: 1 !important; filter: none !important; }
+    #cf-outer { height: 260vh; }
+    #cf-sticky {
+      position: sticky; top: 80px;
+      height: calc(100vh - 80px);
+      display: flex; flex-direction: column;
+      justify-content: flex-start; padding-top: 20px;
+    }
+    .cf-header { margin-bottom: 20px; }
+    .cf-steps-grid {
+      display: block; position: relative;
+      overflow: hidden; border-radius: 20px;
+      flex: 1; min-height: 0;
+    }
+    .cf-step {
+      position: absolute; inset: 0;
+      opacity: 1 !important; filter: none !important;
+      background: rgba(11,14,26,0.97);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 20px; overflow: hidden;
+      transform-origin: center center;
+      will-change: transform;
+      box-shadow: 0 24px 56px rgba(0,0,0,0.55);
+    }
+    #cf-step-1 { z-index: 11; }
+    #cf-step-2 { z-index: 12; }
+    #cf-step-3 { z-index: 13; }
+    .cf-step-img { height: 42%; margin-bottom: 12px; }
+    .cf-badge-row { height: 32px; margin-bottom: 10px; }
     .cf-badge {
       background: linear-gradient(135deg, #1565c0, #1a7fd4) !important;
       color: #fff !important; border-color: transparent !important;
       box-shadow: 0 0 0 4px rgba(21,101,192,0.18), 0 4px 14px rgba(21,101,192,0.35) !important;
     }
+    .cf-step-title { font-size: 1.125rem; margin-bottom: 6px; }
+    .cf-step-desc { font-size: 0.875rem; line-height: 1.6; }
+  }
   }
   .cf-step-title {
     font-family: 'Hanken Grotesk', sans-serif;
@@ -2771,33 +2801,81 @@ window.addEventListener('scroll', () => {
   const badges = ['cf-badge-1','cf-badge-2','cf-badge-3'].map(id => document.getElementById(id));
   if (!outer || !fillEl || steps.some(s => !s)) return;
 
+  // Desktop thresholds (recalculated from badge positions)
   let thresh2 = 0.36, thresh3 = 0.70;
+
+  // Mobile card-stack windows: [enterStart, enterDone]
+  const M = [[0, 0], [0.28, 0.50], [0.62, 0.84]];
+
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+  function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
 
   function calcThresholds() {
     if (window.innerWidth < 1024) return;
-    const gridEl   = document.querySelector('.cf-steps-grid');
+    const gridEl = document.querySelector('.cf-steps-grid');
     if (!gridEl) return;
-    const gridRect = gridEl.getBoundingClientRect();
-    const b2rect   = badges[1].getBoundingClientRect();
-    const b3rect   = badges[2].getBoundingClientRect();
-    thresh2 = (b2rect.left - gridRect.left + b2rect.width * 0.5) / gridRect.width;
-    thresh3 = (b3rect.left - gridRect.left + b3rect.width * 0.5) / gridRect.width;
+    const gr = gridEl.getBoundingClientRect();
+    thresh2 = (badges[1].getBoundingClientRect().left - gr.left + badges[1].getBoundingClientRect().width * 0.5) / gr.width;
+    thresh3 = (badges[2].getBoundingClientRect().left - gr.left + badges[2].getBoundingClientRect().width * 0.5) / gr.width;
+  }
+
+  function getProgress() {
+    const room = outer.offsetHeight - window.innerHeight;
+    const scrolled = Math.max(0, -outer.getBoundingClientRect().top);
+    return Math.min(1, room > 0 ? scrolled / room : 1);
+  }
+
+  function updateDesktop(p) {
+    fillEl.style.width = (p * 100) + '%';
+    steps[0].classList.add('cf-active');
+    steps[1].classList.toggle('cf-active', p >= thresh2);
+    steps[2].classList.toggle('cf-active', p >= thresh3);
+    // Reset any mobile inline transforms
+    steps.forEach(s => { s.style.transform = ''; });
+  }
+
+  function updateMobile(p) {
+    steps.forEach((step, i) => {
+      const [start, done] = M[i];
+      if (i === 0) {
+        // Step 1: always present, compress slightly as others stack on top
+        const topIdx = (p >= M[2][1]) ? 2 : (p >= M[1][1]) ? 1 : 0;
+        const depth = topIdx;
+        const scale = 1 - depth * 0.035;
+        const dy = depth * 10;
+        step.style.transform = `translateY(-${dy}px) scale(${scale})`;
+        step.style.opacity = depth === 0 ? '1' : (depth === 1 ? '0.70' : '0.45');
+        return;
+      }
+      if (p < start) {
+        step.style.transform = 'translateY(100%)';
+        step.style.opacity = '1';
+        return;
+      }
+      const t = clamp((p - start) / (done - start), 0, 1);
+      const eased = easeOutCubic(t);
+      if (t < 1) {
+        // Entering: slide up from bottom
+        step.style.transform = `translateY(${(1 - eased) * 100}%)`;
+        step.style.opacity = '1';
+      } else {
+        // Fully entered — check if something is on top of it
+        const topIdx = (p >= M[2][1]) ? 2 : 1;
+        const depth = topIdx - i;
+        const scale = 1 - depth * 0.035;
+        const dy = depth * 10;
+        step.style.transform = `translateY(-${dy}px) scale(${scale})`;
+        step.style.opacity = depth === 0 ? '1' : '0.70';
+      }
+    });
+    // Remove desktop active classes on mobile
+    steps.forEach(s => s.classList.remove('cf-active'));
+    fillEl.style.width = '0%';
   }
 
   function update() {
-    if (window.innerWidth < 1024) {
-      steps.forEach(s => s.classList.add('cf-active'));
-      fillEl.style.width = '100%';
-      return;
-    }
-    const scrollRoom = outer.offsetHeight - window.innerHeight;
-    const scrolled   = Math.max(0, -outer.getBoundingClientRect().top);
-    const progress   = Math.min(1, scrollRoom > 0 ? scrolled / scrollRoom : 1);
-
-    fillEl.style.width = (progress * 100) + '%';
-    steps[0].classList.add('cf-active');
-    steps[1].classList.toggle('cf-active', progress >= thresh2);
-    steps[2].classList.toggle('cf-active', progress >= thresh3);
+    const p = getProgress();
+    if (window.innerWidth < 1024) { updateMobile(p); } else { updateDesktop(p); }
   }
 
   window.addEventListener('load',   () => { calcThresholds(); update(); });
