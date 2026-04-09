@@ -509,8 +509,8 @@
       transform-origin: top center; will-change: transform;
       box-shadow: 0 8px 32px rgba(0,0,0,0.50);
     }
-    /* Todos os cards iniciam fora da tela (abaixo do viewport) */
-    #cf-step-1 { z-index: 11; transform: translateY(100vh); }
+    /* Card 1 visível de imediato; cards 2 e 3 entram pelo fundo */
+    #cf-step-1 { z-index: 11; transform: translateY(0); }
     #cf-step-2 { z-index: 12; transform: translateY(100vh); }
     #cf-step-3 { z-index: 13; transform: translateY(100vh); }
     .cf-step-img { height: 160px; margin-bottom: 12px; }
@@ -2855,19 +2855,16 @@ window.addEventListener('scroll', () => {
   const PEEK_TOTAL = PEEK_D1 + PEEK_D2;
   let CARD_H = 0, HIDDEN = 0;
 
-  // Todos os 3 cards animam vindo de baixo (thresholds espaçados)
-  const M_START = [0.03, 0.35, 0.67];
-  const M_END   = [0.25, 0.57, 0.89];
+  // Posição final de cada card (peek no TOPO: cards mais novos cobrem os mais antigos)
+  // Card 0 fica em y=0, card 1 em y=16, card 2 em y=26 — os tops dos anteriores ficam visíveis
+  const FINAL_Y = [0, PEEK_D1, PEEK_D1 + PEEK_D2];
+
+  // Card 0 já está visível; apenas cards 1 e 2 animam (índice 0 = null, não anima)
+  const M_START = [null, 0.12, 0.52];
+  const M_END   = [null, 0.45, 0.85];
 
   function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
   function easeOutCubic(t)   { return 1 - Math.pow(1 - t, 3); }
-
-  // translateY de um card totalmente empilhado com profundidade `d`
-  function stackedY(d) {
-    if (d <= 0) return 0;
-    if (d === 1) return PEEK_D1;
-    return PEEK_D1 + PEEK_D2;
-  }
 
   function initMobileCards() {
     if (window.innerWidth >= 1024) return;
@@ -2880,8 +2877,10 @@ window.addEventListener('scroll', () => {
     steps.forEach(s => s.style.height = CARD_H + 'px');
     HIDDEN = window.innerHeight;
     grid.style.height = (CARD_H + PEEK_TOTAL) + 'px';
-    steps.forEach(s => s.style.transform = `translateY(${HIDDEN}px)`);
-    steps.forEach(s => s.style.transform = `translateY(${HIDDEN}px)`);
+    // Card 0 visível de imediato; demais fora da tela
+    steps[0].style.transform = `translateY(0)`;
+    steps[1].style.transform = `translateY(${HIDDEN}px)`;
+    steps[2].style.transform = `translateY(${HIDDEN}px)`;
   }
 
   // ── Shared ────────────────────────────────────────────────────
@@ -2902,39 +2901,15 @@ window.addEventListener('scroll', () => {
   function updateMobile(p) {
     if (CARD_H === 0) return;
 
-    // Qual card está entrando agora (todos os 3 animam de baixo para cima)
-    let enteringIdx = -1, enterFrac = 0;
-    for (let j = 0; j < 3; j++) {
-      if (p >= M_START[j] && p < M_END[j]) {
-        enteringIdx = j;
-        enterFrac = easeOutCubic(clamp((p - M_START[j]) / (M_END[j] - M_START[j]), 0, 1));
-        break;
-      }
-    }
-
-    // Último card totalmente assentado (-1 = nenhum ainda)
-    let settledTop = -1;
-    if (p >= M_END[2]) settledTop = 2;
-    else if (p >= M_END[1]) settledTop = 1;
-    else if (p >= M_END[0]) settledTop = 0;
-
-    const curTop = enteringIdx >= 0 ? enteringIdx : settledTop;
-
     steps.forEach((step, i) => {
       let y;
-      if (i === enteringIdx) {
-        // Subindo do fundo da tela
-        y = HIDDEN * (1 - enterFrac);
-      } else if (settledTop < i) {
-        // Ainda fora da tela (abaixo)
-        y = HIDDEN;
+      if (i === 0) {
+        // Card 1 sempre visível no topo da pilha (nunca se move)
+        y = 0;
       } else {
-        // Assentado — interpola profundidade enquanto próximo card entra
-        const oldDepth = settledTop - i;
-        const newDepth = (curTop >= 0 ? curTop : settledTop) - i;
-        y = (enteringIdx >= 0 && i < enteringIdx)
-          ? stackedY(oldDepth) + (stackedY(newDepth) - stackedY(oldDepth)) * enterFrac
-          : stackedY(settledTop - i);
+        // Cards 2 e 3 sobem do fundo até sua posição final (peek no topo)
+        const frac = easeOutCubic(clamp((p - M_START[i]) / (M_END[i] - M_START[i]), 0, 1));
+        y = HIDDEN + (FINAL_Y[i] - HIDDEN) * frac;
       }
       step.style.transform = `translateY(${y}px)`;
     });
