@@ -1100,6 +1100,42 @@
     }
   }
 
+  /* ── Alinhamento à esquerda em mobile — títulos e hats de todas as seções ── */
+  @media (max-width: 1023px) {
+    /* Método / Stats */
+    #metodo .text-center {
+      text-align: left !important;
+      max-width: 100% !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+    }
+    /* Depoimentos */
+    #depoimentos .text-center {
+      text-align: left !important;
+      align-items: flex-start !important;
+    }
+    #depoimentos .text-center p { max-width: 100% !important; }
+    /* Time */
+    #time .text-center {
+      text-align: left !important;
+    }
+    /* Dark CTA — seção inteira centralizada, override no mobile */
+    #dark-cta {
+      text-align: left !important;
+    }
+    #dark-cta .dark-cta-dot {
+      justify-content: flex-start !important;
+    }
+    #dark-cta .cx > p {
+      max-width: 100% !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+    }
+    #dark-cta .cx > .flex {
+      align-items: flex-start !important;
+    }
+  }
+
   /* ── Footer — Sticky Reveal ── */
   :root { --footer-h: 420px; }
   @media (max-width: 1023px) { :root { --footer-h: 620px; } }
