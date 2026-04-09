@@ -413,12 +413,12 @@
   /* ── Como Funciona — scroll-jacked 3 passos ── */
   #cf-outer { position: relative; }
   @media (min-width: 1024px) { #cf-outer { height: 280vh; } }
-  #cf-sticky { overflow: hidden; }
   @media (min-width: 1024px) {
     #cf-sticky {
       position: sticky; top: 80px;
       height: calc(100vh - 80px);
       display: flex; flex-direction: column; justify-content: center;
+      overflow: hidden;
     }
   }
   .cf-header { margin-bottom: 48px; }
@@ -476,16 +476,16 @@
     color: #fff; border-color: transparent;
     box-shadow: 0 0 0 4px rgba(21,101,192,0.18), 0 4px 14px rgba(21,101,192,0.35);
   }
-  /* Mobile: sticky card stack ──────────────────────── */
+  /* Mobile: cards voam de baixo para cima e formam stack ───── */
   @media (max-width: 1023px) {
-    #cf-outer { height: 260vh; }
+    #cf-outer { height: 300vh; }
     #cf-sticky {
       position: sticky; top: 80px;
       height: calc(100vh - 80px);
       display: flex; flex-direction: column;
       justify-content: flex-start; padding-top: 20px;
+      overflow: visible; /* cards entram do fundo da tela */
     }
-    /* Propagate flex height through intermediate containers */
     #cf-sticky > .cx {
       display: flex; flex-direction: column;
       flex: 1; min-height: 0; height: 100%;
@@ -497,23 +497,22 @@
     .cf-header { margin-bottom: 20px; flex-shrink: 0; }
     .cf-steps-grid {
       display: block; position: relative;
-      overflow: hidden; border-radius: 20px;
-      min-height: 320px; /* JS vai corrigir com altura real */
+      overflow: visible; /* sem caixa de clipping */
+      min-height: 320px;
     }
     .cf-step {
       position: absolute; left: 0; right: 0; top: 0;
       opacity: 1 !important; filter: none !important;
       background: rgba(11,14,26,0.97);
       border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 20px;
-      padding: 20px;
-      transform-origin: top center;
-      will-change: transform;
+      border-radius: 20px; padding: 20px;
+      transform-origin: top center; will-change: transform;
       box-shadow: 0 8px 32px rgba(0,0,0,0.50);
     }
-    #cf-step-1 { z-index: 11; }
-    #cf-step-2 { z-index: 12; transform: translateY(400px); }
-    #cf-step-3 { z-index: 13; transform: translateY(400px); }
+    /* Todos os cards iniciam fora da tela (abaixo do viewport) */
+    #cf-step-1 { z-index: 11; transform: translateY(100vh); }
+    #cf-step-2 { z-index: 12; transform: translateY(100vh); }
+    #cf-step-3 { z-index: 13; transform: translateY(100vh); }
     .cf-step-img { height: 160px; margin-bottom: 12px; }
     .cf-badge-row { height: 32px; margin-bottom: 10px; }
     .cf-badge {
@@ -523,7 +522,6 @@
     }
     .cf-step-title { font-size: 1.125rem; margin-bottom: 6px; }
     .cf-step-desc { font-size: 0.875rem; line-height: 1.6; }
-  }
   }
   .cf-step-title {
     font-family: 'Hanken Grotesk', sans-serif;
@@ -1159,7 +1157,6 @@
     text-decoration: none;
   }
   #wa-float:hover { transform: scale(1.08) translateY(-2px); box-shadow: 0 10px 32px rgba(37,211,102,0.50); }
-  @media (min-width: 1024px) { #wa-float { display: none; } }
 
   /* Nav CTA — hide on small screens, show sm+ */
   @media (min-width: 640px) { #nav-cta-btn { display: inline-flex !important; } }
@@ -1470,7 +1467,7 @@
     <!-- Title: order 1 on mobile | col 2 row 1 on desktop -->
     <div class="com-title-wrap reveal reveal-delay-1">
       <span class="text-primary font-bold tracking-[0.2em] uppercase text-[0.6875rem] mb-4 block">Comunidade Real</span>
-      <h2 class="font-display text-4xl lg:text-5xl font-extrabold tracking-tight com-title-h2">Aqui você <span class="gradient-rainbow">não treina sozinho</span>. E isso muda tudo.</h2>
+      <h2 class="font-display text-4xl lg:text-5xl font-extrabold tracking-tight com-title-h2">Você <span class="gradient-rainbow">não treina sozinho</span>. E isso muda tudo.</h2>
     </div>
     <!-- Videos: order 2 on mobile | col 1 rows 1–2 on desktop -->
     <div class="com-videos-wrap relative reveal">
@@ -2857,13 +2854,14 @@ window.addEventListener('scroll', () => {
   }
 
   // ── Mobile card-stack ─────────────────────────────────────────
-  const PEEK_D1 = 16;  // px que o card de profundidade-1 aparece abaixo do topo
-  const PEEK_D2 = 10;  // px que o card de profundidade-2 aparece abaixo do d1
+  const PEEK_D1 = 16;
+  const PEEK_D2 = 10;
   const PEEK_TOTAL = PEEK_D1 + PEEK_D2;
-  let CARD_H = 0, HIDDEN = 400;
+  let CARD_H = 0, HIDDEN = 0;
 
-  const M_START = [0, 0.28, 0.62]; // quando cada card começa a entrar
-  const M_END   = [0, 0.50, 0.84]; // quando cada card termina de entrar
+  // Todos os 3 cards animam vindo de baixo (thresholds espaçados)
+  const M_START = [0.03, 0.35, 0.67];
+  const M_END   = [0.25, 0.57, 0.89];
 
   function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
   function easeOutCubic(t)   { return 1 - Math.pow(1 - t, 3); }
@@ -2879,12 +2877,10 @@ window.addEventListener('scroll', () => {
     if (window.innerWidth >= 1024) return;
     const grid = document.querySelector('.cf-steps-grid');
     if (!grid) return;
-    steps[0].style.transform = 'translateY(0)';
     CARD_H = steps[0].offsetHeight;
-    HIDDEN = CARD_H + PEEK_TOTAL + 8;
+    HIDDEN = window.innerHeight;          // cards partem do fundo da tela
     grid.style.height = (CARD_H + PEEK_TOTAL) + 'px';
-    steps[1].style.transform = `translateY(${HIDDEN}px)`;
-    steps[2].style.transform = `translateY(${HIDDEN}px)`;
+    steps.forEach(s => s.style.transform = `translateY(${HIDDEN}px)`);
   }
 
   // ── Shared ────────────────────────────────────────────────────
@@ -2905,9 +2901,9 @@ window.addEventListener('scroll', () => {
   function updateMobile(p) {
     if (CARD_H === 0) return;
 
-    // Card que está a entrar agora (se houver)
+    // Qual card está entrando agora (todos os 3 animam de baixo para cima)
     let enteringIdx = -1, enterFrac = 0;
-    for (let j = 1; j < 3; j++) {
+    for (let j = 0; j < 3; j++) {
       if (p >= M_START[j] && p < M_END[j]) {
         enteringIdx = j;
         enterFrac = easeOutCubic(clamp((p - M_START[j]) / (M_END[j] - M_START[j]), 0, 1));
@@ -2915,27 +2911,29 @@ window.addEventListener('scroll', () => {
       }
     }
 
-    // Topo após a última transição completa
-    let prevTop = 0;
-    if (p >= M_END[2]) prevTop = 2;
-    else if (p >= M_END[1]) prevTop = 1;
-    const newTop = enteringIdx >= 0 ? enteringIdx : prevTop;
+    // Último card totalmente assentado (-1 = nenhum ainda)
+    let settledTop = -1;
+    if (p >= M_END[2]) settledTop = 2;
+    else if (p >= M_END[1]) settledTop = 1;
+    else if (p >= M_END[0]) settledTop = 0;
+
+    const curTop = enteringIdx >= 0 ? enteringIdx : settledTop;
 
     steps.forEach((step, i) => {
       let y;
       if (i === enteringIdx) {
-        // Este card está deslizando de baixo para cima
+        // Subindo do fundo da tela
         y = HIDDEN * (1 - enterFrac);
-      } else if (p < M_START[i] || (i > prevTop && i !== enteringIdx)) {
-        // Ainda não entrou
+      } else if (settledTop < i) {
+        // Ainda fora da tela (abaixo)
         y = HIDDEN;
       } else {
-        // Totalmente empilhado — interpola da posição antiga para a nova
-        const oldDepth = prevTop - i;
-        const newDepth = newTop  - i;
+        // Assentado — interpola profundidade enquanto próximo card entra
+        const oldDepth = settledTop - i;
+        const newDepth = (curTop >= 0 ? curTop : settledTop) - i;
         y = (enteringIdx >= 0 && i < enteringIdx)
           ? stackedY(oldDepth) + (stackedY(newDepth) - stackedY(oldDepth)) * enterFrac
-          : stackedY(prevTop - i);
+          : stackedY(settledTop - i);
       }
       step.style.transform = `translateY(${y}px)`;
     });
