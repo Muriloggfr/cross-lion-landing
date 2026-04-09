@@ -2873,9 +2873,14 @@ window.addEventListener('scroll', () => {
     if (window.innerWidth >= 1024) return;
     const grid = document.querySelector('.cf-steps-grid');
     if (!grid) return;
-    CARD_H = steps[0].offsetHeight;
-    HIDDEN = window.innerHeight;          // cards partem do fundo da tela
+    // Reseta alturas para medir o tamanho natural de cada card
+    steps.forEach(s => { s.style.height = ''; s.style.transform = ''; });
+    // Iguala todos ao card mais alto
+    CARD_H = Math.max(...steps.map(s => s.offsetHeight));
+    steps.forEach(s => s.style.height = CARD_H + 'px');
+    HIDDEN = window.innerHeight;
     grid.style.height = (CARD_H + PEEK_TOTAL) + 'px';
+    steps.forEach(s => s.style.transform = `translateY(${HIDDEN}px)`);
     steps.forEach(s => s.style.transform = `translateY(${HIDDEN}px)`);
   }
 
