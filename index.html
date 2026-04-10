@@ -158,6 +158,30 @@
   }
   #hero-bg-img { position: absolute; inset: 0; z-index: 0; }
   #hero-bg-img img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+
+  /* ── Raios de luz diagonais no Hero ── */
+  #hero-rays {
+    position: absolute; inset: 0; z-index: 1;
+    pointer-events: none; overflow: hidden;
+  }
+  #hero-rays .hr {
+    position: absolute; top: -80%; height: 300%;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(10, 60, 160, 0.06) 25%,
+      rgba(0, 160, 255, 0.22) 50%,
+      rgba(10, 60, 160, 0.06) 75%,
+      transparent 100%
+    );
+    transform: rotate(-45deg);
+    transform-origin: 50% 50%;
+  }
+  @keyframes hrA { 0%,100%{opacity:.12} 50%{opacity:.90} }
+  @keyframes hrB { 0%,100%{opacity:.05} 55%{opacity:1}   }
+  @keyframes hrC { 0%,100%{opacity:.18} 40%{opacity:.65} }
+  @keyframes hrD { 0%,100%{opacity:.08} 45%{opacity:.85} }
+  @keyframes hrE { 0%,100%{opacity:.15} 60%{opacity:.70} }
+  @keyframes hrF { 0%,100%{opacity:.04} 50%{opacity:.95} }
   #hero-overlay-left {
     position: absolute; inset: 0; z-index: 1; pointer-events: none;
     background: linear-gradient(to right,
@@ -1381,6 +1405,22 @@
   <div id="hero-bg-img" aria-hidden="true">
     <img src="https://placehold.co/1920x1080/1a1a2e/333355" alt="Cross Lion — academia de crossfit e cross training em Ribeirão Preto" style="object-position: 63% top;"/>
   </div>
+  <!-- Raios de luz diagonais -->
+  <div id="hero-rays" aria-hidden="true">
+    <!-- raio 1: fino, brilhante, esquerda -->
+    <div class="hr" style="left:-8%;width:48px;animation:hrB 5.5s ease-in-out 0s infinite;"></div>
+    <!-- raio 2: largo, médio, centro-esquerda -->
+    <div class="hr" style="left:18%;width:120px;animation:hrA 7s ease-in-out 1.2s infinite;"></div>
+    <!-- raio 3: fino, rápido, centro -->
+    <div class="hr" style="left:37%;width:36px;animation:hrC 4.5s ease-in-out 2.8s infinite;"></div>
+    <!-- raio 4: médio, brilhante, centro-direita -->
+    <div class="hr" style="left:55%;width:90px;animation:hrF 6.5s ease-in-out 0.5s infinite;"></div>
+    <!-- raio 5: fino, lento, direita -->
+    <div class="hr" style="left:72%;width:55px;animation:hrD 8s ease-in-out 3.5s infinite;"></div>
+    <!-- raio 6: extra fino, extremo direito -->
+    <div class="hr" style="left:88%;width:30px;animation:hrE 5s ease-in-out 1.8s infinite;"></div>
+  </div>
+
   <div id="hero-overlay-left" aria-hidden="true"></div>
   <div id="hero-overlay-bottom" aria-hidden="true"></div>
 
