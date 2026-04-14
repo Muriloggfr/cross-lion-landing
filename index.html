@@ -584,6 +584,41 @@
     color: #fff;
   }
 
+  /* ── Metodo section — photo fan & hover ── */
+  .metodo-photo-arc {
+    position: relative;
+    flex-shrink: 0;
+    pointer-events: auto;
+  }
+  .metodo-photo-arc:hover { z-index: 50 !important; }
+  .metodo-photo-card {
+    position: relative;
+    transition: transform 0.2s ease;
+    cursor: default;
+  }
+  .metodo-photo-card:hover {
+    transform: rotate(var(--rot, 0deg)) translateY(-10px) !important;
+  }
+  .metodo-photo-label {
+    position: absolute;
+    top: 100%; left: 0; right: 0;
+    background: #fff;
+    border-radius: 0 0 13px 13px;
+    padding: 6px 4px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    text-align: center;
+    pointer-events: none;
+  }
+  .metodo-photo-card:hover .metodo-photo-label { opacity: 1; }
+
+  /* Hide outermost 2 cards on small screens */
+  @media (max-width: 767px) {
+    #metodo-photos .metodo-photo-arc:first-child,
+    #metodo-photos .metodo-photo-arc:last-child { display: none; }
+    #metodo-photos { flex-wrap: nowrap; }
+  }
+
   /* ── Flatpickr dark theme ── */
   .flatpickr-calendar {
     background: #111a2e !important;
@@ -1627,57 +1662,142 @@
 </section>
 
 <!-- PROBLEMA / MÉTODO -->
-<section id="metodo" class="relative py-32 overflow-hidden">
+<section id="metodo" class="relative" style="padding: 160px 0 120px; overflow: visible;">
 
-  <!-- Cordas de CrossFit — canvas animado -->
-  <canvas id="rope-canvas" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1;pointer-events:none;"></canvas>
+  <!-- Subtle grid background -->
+  <div aria-hidden="true" style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;"></div>
 
-  <!-- Conteúdo -->
-  <div class="relative z-10 cx">
-    <div class="max-w-3xl mx-auto mb-24 reveal text-center">
-      <span class="text-primary font-bold tracking-[0.2em] uppercase text-[0.6875rem] mb-4 block">O Método Cross Lion</span>
-      <h2 class="font-display text-4xl lg:text-5xl font-extrabold tracking-tight mb-6 text-white">
-        Aqui, seu treino se torna <em class="text-primary not-italic">resultado de verdade.</em>
-      </h2>
-      <p class="text-lg leading-relaxed" style="color: rgba(255,255,255,0.60);">Nossa estrutura é desenhada para remover todas as barreiras entre você e sua melhor versão.</p>
-    </div>
-    <!-- Stats grid -->
-    <div class="reveal" style="position: relative;">
-      <!-- glow atrás do container -->
-      <div style="
-        position: absolute; inset: -40px;
-        background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(21,101,192,0.55) 0%, transparent 70%);
-        pointer-events: none; filter: blur(20px);
-      "></div>
-      <!-- Cards individuais flutuantes -->
-      <div class="stats-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;position:relative;">
-        <!-- stat 1: perda de peso -->
-        <div class="stat-item" style="padding:36px 28px;border-radius:16px;border:1px solid rgba(21,101,192,0.40);background:rgba(21,101,192,0.06);backdrop-filter:blur(12px);animation:stat-float 3.4s ease-in-out 0s infinite;">
-          <div class="stat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:rgba(255,255,255,0.75)"><path d="M6.5 6.5l11 0"/><path d="M12 3a3 3 0 0 0-3 3v0a3 3 0 0 0 3 3 3 3 0 0 0 3-3v0a3 3 0 0 0-3-3z"/><path d="M4 21h16"/><path d="M5 21V10h14v11"/><path d="M9 14h6"/></svg></div>
-          <p class="font-display text-white" style="font-size: clamp(1.6rem,3.2vw,2.6rem); font-weight:900; line-height:1; margin-bottom:10px;">-3 a -4 kg</p>
-          <p style="font-size:0.8rem; color:rgba(255,255,255,0.45); letter-spacing:0.05em; text-transform:uppercase;">já no 1º mês</p>
+  <div class="cx" style="position:relative;z-index:1;">
+
+    <!-- ── Lime-green card ── -->
+    <div style="background:#93FF06;border-radius:20px;position:relative;overflow:visible;text-align:center;padding:200px 40px 220px;">
+
+      <!-- ── Photo fan row: bottoms aligned, arc via margin-bottom ── -->
+      <div id="metodo-photos" style="position:absolute;bottom:calc(100% - 80px);left:50%;transform:translateX(-50%);display:flex;align-items:flex-end;justify-content:center;">
+
+        <!-- Photo 1: −12° | edge | mb 0 | z 1 -->
+        <div class="metodo-photo-arc" style="z-index:1;margin-bottom:0;">
+          <div class="metodo-photo-card" style="--rot:-12deg;transform:rotate(-12deg);">
+            <div style="width:140px;height:140px;overflow:hidden;border-radius:13px;border:2.5px solid rgba(255,255,255,0.88);box-shadow:0 6px 28px rgba(0,0,0,0.38);">
+              <img src="img/587808552_17877668442448636_7517668442448636_n.jpg" style="width:100%;height:100%;object-fit:cover;object-position:top;" alt="Aluna Cross Lion" loading="lazy"/>
+            </div>
+            <div class="metodo-photo-label">
+              <p style="font-size:11px;font-weight:800;color:#111;margin:0;line-height:1.3;">Maria E.</p>
+              <p style="font-size:10px;color:#1565c0;font-weight:700;margin:0;">-4 kg em 1 mês</p>
+            </div>
+          </div>
         </div>
-        <!-- stat 2: disposição -->
-        <div class="stat-item" style="padding:36px 28px;border-radius:16px;border:1px solid rgba(21,101,192,0.40);background:rgba(21,101,192,0.06);backdrop-filter:blur(12px);animation:stat-float 3.4s ease-in-out 0.5s infinite;">
-          <div class="stat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="color:rgba(255,255,255,0.75)"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-          <p class="font-display text-white" style="font-size: clamp(1.6rem,3.2vw,2.6rem); font-weight:900; line-height:1; margin-bottom:10px;">+40%</p>
-          <p style="font-size:0.8rem; color:rgba(255,255,255,0.45); letter-spacing:0.05em; text-transform:uppercase;">mais disposição</p>
+
+        <!-- Photo 2: −8° | mb 28 | z 2 -->
+        <div class="metodo-photo-arc" style="z-index:2;margin-bottom:28px;margin-left:-42px;">
+          <div class="metodo-photo-card" style="--rot:-8deg;transform:rotate(-8deg);">
+            <div style="width:140px;height:140px;overflow:hidden;border-radius:13px;border:2.5px solid rgba(255,255,255,0.88);box-shadow:0 6px 28px rgba(0,0,0,0.38);">
+              <img src="img/587810390_17877668310448636_2535211440100881690_n.jpg" style="width:100%;height:100%;object-fit:cover;object-position:top;" alt="Aluna Cross Lion" loading="lazy"/>
+            </div>
+            <div class="metodo-photo-label">
+              <p style="font-size:11px;font-weight:800;color:#111;margin:0;line-height:1.3;">Rosana R.</p>
+              <p style="font-size:10px;color:#1565c0;font-weight:700;margin:0;">+40% disposição</p>
+            </div>
+          </div>
         </div>
-        <!-- stat 3: força -->
-        <div class="stat-item" style="padding:36px 28px;border-radius:16px;border:1px solid rgba(21,101,192,0.40);background:rgba(21,101,192,0.06);backdrop-filter:blur(12px);animation:stat-float 3.4s ease-in-out 1.0s infinite;">
-          <div class="stat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:rgba(255,255,255,0.75)"><path d="M6 7v10"/><path d="M18 7v10"/><path d="M6 12h12"/><rect x="3" y="9" width="3" height="6" rx="1"/><rect x="18" y="9" width="3" height="6" rx="1"/><rect x="1" y="10.5" width="2" height="3" rx="0.5"/><rect x="21" y="10.5" width="2" height="3" rx="0.5"/></svg></div>
-          <p class="font-display text-white" style="font-size: clamp(1.6rem,3.2vw,2.6rem); font-weight:900; line-height:1; margin-bottom:10px;">2× mais</p>
-          <p style="font-size:0.8rem; color:rgba(255,255,255,0.45); letter-spacing:0.05em; text-transform:uppercase;">força em 60 dias</p>
+
+        <!-- Photo 3: −4° | mb 54 | z 3 -->
+        <div class="metodo-photo-arc" style="z-index:3;margin-bottom:54px;margin-left:-42px;">
+          <div class="metodo-photo-card" style="--rot:-4deg;transform:rotate(-4deg);">
+            <div style="width:140px;height:140px;overflow:hidden;border-radius:13px;border:2.5px solid rgba(255,255,255,0.88);box-shadow:0 6px 28px rgba(0,0,0,0.38);">
+              <img src="img/599838240_17877185751448636_150733522753873949_n.jpg" style="width:100%;height:100%;object-fit:cover;object-position:top;" alt="Aluno Cross Lion" loading="lazy"/>
+            </div>
+            <div class="metodo-photo-label">
+              <p style="font-size:11px;font-weight:800;color:#111;margin:0;line-height:1.3;">Cristiane J.</p>
+              <p style="font-size:10px;color:#1565c0;font-weight:700;margin:0;">2× mais força</p>
+            </div>
+          </div>
         </div>
-        <!-- stat 4: sono e saúde -->
-        <div class="stat-item" style="padding:36px 28px;border-radius:16px;border:1px solid rgba(21,101,192,0.40);background:rgba(21,101,192,0.06);backdrop-filter:blur(12px);animation:stat-float 3.4s ease-in-out 1.5s infinite;">
-          <div class="stat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="color:rgba(255,255,255,0.75)"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
-          <p class="font-display text-white" style="font-size: clamp(1.6rem,3.2vw,2.6rem); font-weight:900; line-height:1; margin-bottom:10px;">92%</p>
-          <p style="font-size:0.8rem; color:rgba(255,255,255,0.45); letter-spacing:0.05em; text-transform:uppercase;">dormem melhor desde o 1º mês</p>
+
+        <!-- Photo 4: −1° | mb 76 | z 4 (center-left) -->
+        <div class="metodo-photo-arc" style="z-index:4;margin-bottom:76px;margin-left:-42px;">
+          <div class="metodo-photo-card" style="--rot:-1deg;transform:rotate(-1deg);">
+            <div style="width:140px;height:140px;overflow:hidden;border-radius:13px;border:2.5px solid rgba(255,255,255,0.88);box-shadow:0 6px 28px rgba(0,0,0,0.38);">
+              <img src="img/603948356_17877525972448636_1440164047005701416_n.jpg" style="width:100%;height:100%;object-fit:cover;object-position:top;" alt="Aluno Cross Lion" loading="lazy"/>
+            </div>
+            <div class="metodo-photo-label">
+              <p style="font-size:11px;font-weight:800;color:#111;margin:0;line-height:1.3;">Guilherme M.</p>
+              <p style="font-size:10px;color:#1565c0;font-weight:700;margin:0;">-5 kg em 6 sem.</p>
+            </div>
+          </div>
         </div>
+
+        <!-- Photo 5: +1° | mb 76 | z 4 (center-right) -->
+        <div class="metodo-photo-arc" style="z-index:4;margin-bottom:76px;margin-left:-42px;">
+          <div class="metodo-photo-card" style="--rot:1deg;transform:rotate(1deg);">
+            <div style="width:140px;height:140px;overflow:hidden;border-radius:13px;border:2.5px solid rgba(255,255,255,0.88);box-shadow:0 6px 28px rgba(0,0,0,0.38);">
+              <img src="img/607654553_17878557096448636_6171912240884697274_n.jpg" style="width:100%;height:100%;object-fit:cover;object-position:top;" alt="Aluna Cross Lion" loading="lazy"/>
+            </div>
+            <div class="metodo-photo-label">
+              <p style="font-size:11px;font-weight:800;color:#111;margin:0;line-height:1.3;">Caroline F.</p>
+              <p style="font-size:10px;color:#1565c0;font-weight:700;margin:0;">Menos estresse</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Photo 6: +4° | mb 54 | z 3 -->
+        <div class="metodo-photo-arc" style="z-index:3;margin-bottom:54px;margin-left:-42px;">
+          <div class="metodo-photo-card" style="--rot:4deg;transform:rotate(4deg);">
+            <div style="width:140px;height:140px;overflow:hidden;border-radius:13px;border:2.5px solid rgba(255,255,255,0.88);box-shadow:0 6px 28px rgba(0,0,0,0.38);">
+              <img src="img/611675658_17879210163448636_1108892007535271691_n.jpg" style="width:100%;height:100%;object-fit:cover;object-position:top;" alt="Aluna Cross Lion" loading="lazy"/>
+            </div>
+            <div class="metodo-photo-label">
+              <p style="font-size:11px;font-weight:800;color:#111;margin:0;line-height:1.3;">Adriele B.</p>
+              <p style="font-size:10px;color:#1565c0;font-weight:700;margin:0;">+3 kg músculo</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Photo 7: +8° | mb 28 | z 2 -->
+        <div class="metodo-photo-arc" style="z-index:2;margin-bottom:28px;margin-left:-42px;">
+          <div class="metodo-photo-card" style="--rot:8deg;transform:rotate(8deg);">
+            <div style="width:140px;height:140px;overflow:hidden;border-radius:13px;border:2.5px solid rgba(255,255,255,0.88);box-shadow:0 6px 28px rgba(0,0,0,0.38);">
+              <img src="img/653926041_18570834619056991_6041585347540280092_n.jpg" style="width:100%;height:100%;object-fit:cover;object-position:top;" alt="Aluna Cross Lion" loading="lazy"/>
+            </div>
+            <div class="metodo-photo-label">
+              <p style="font-size:11px;font-weight:800;color:#111;margin:0;line-height:1.3;">Gabriela P.</p>
+              <p style="font-size:10px;color:#1565c0;font-weight:700;margin:0;">-3 kg no 1º mês</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Photo 8: +12° | edge | mb 0 | z 1 -->
+        <div class="metodo-photo-arc" style="z-index:1;margin-bottom:0;margin-left:-42px;">
+          <div class="metodo-photo-card" style="--rot:12deg;transform:rotate(12deg);">
+            <div style="width:140px;height:140px;overflow:hidden;border-radius:13px;border:2.5px solid rgba(255,255,255,0.88);box-shadow:0 6px 28px rgba(0,0,0,0.38);">
+              <img src="img/cross1.jpg" style="width:100%;height:100%;object-fit:cover;object-position:top;" alt="Aluna Cross Lion" loading="lazy"/>
+            </div>
+            <div class="metodo-photo-label">
+              <p style="font-size:11px;font-weight:800;color:#111;margin:0;line-height:1.3;">Mirian A.</p>
+              <p style="font-size:10px;color:#1565c0;font-weight:700;margin:0;">Mais energia</p>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /photo row -->
+
+      <!-- ── Central text ── -->
+      <div style="max-width:540px;margin:0 auto;">
+        <span style="font-size:0.6875rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(0,0,0,0.50);display:block;margin-bottom:16px;">O Método Cross Lion</span>
+        <h2 style="font-family:'Hanken Grotesk',sans-serif;font-size:clamp(1.9rem,3.6vw,2.75rem);font-weight:800;line-height:1.1;color:#0a0a0a;margin:0 0 20px;letter-spacing:-0.02em;">Aqui, seu treino se torna<br/>resultado de verdade.</h2>
+        <p style="font-size:1.05rem;color:rgba(0,0,0,0.60);max-width:460px;margin:0 auto;line-height:1.7;">Nossa estrutura é desenhada para remover todas as barreiras entre você e sua melhor versão.</p>
       </div>
-    </div>
-  </div>
+
+      <!-- ── Bottom: lion video (swap <img> for <video> once leao-rugindo.mp4 is in /video/) ── -->
+      <div id="metodo-lion" style="position:absolute;bottom:-80px;left:50%;transform:translateX(-50%);width:200px;pointer-events:none;" aria-hidden="true">
+        <video autoplay muted loop playsinline style="width:100%;display:none;" id="metodo-lion-video">
+          <source src="video/leao-rugindo.mp4" type="video/mp4"/>
+        </video>
+        <img src="img/logo_lion.svg" alt="" id="metodo-lion-img" style="width:100%;display:block;"/>
+      </div>
+
+    </div><!-- /lime-green card -->
+  </div><!-- /cx -->
 </section>
 
 <!-- COMUNIDADE -->
@@ -2414,6 +2534,18 @@
   });
 })();
 
+// ── Lion video: show when available, hide static fallback ──
+(function () {
+  const vid = document.getElementById('metodo-lion-video');
+  const img = document.getElementById('metodo-lion-img');
+  if (!vid || !img) return;
+  vid.addEventListener('canplay', function onCanPlay() {
+    vid.style.display = 'block';
+    img.style.display = 'none';
+    vid.removeEventListener('canplay', onCanPlay);
+  }, { once: true });
+})();
+
 // ── WhatsApp number — atualize aqui ──────────────────
 const WA_NUMBER = '5516991336272';
 
@@ -2942,159 +3074,7 @@ window.addEventListener('scroll', () => {
   obs.observe(footer);
 })();
 
-// ── Battle Ropes Canvas (metodo) ────────────────────────
-(function () {
-  const canvas  = document.getElementById('rope-canvas');
-  const section = document.getElementById('metodo');
-  if (!canvas || !section) return;
-  const ctx = canvas.getContext('2d');
-  let time = 0, raf = null, running = false;
-
-  function resize() {
-    canvas.width  = section.offsetWidth;
-    canvas.height = section.offsetHeight;
-  }
-
-  // Y position on a rope at fraction t
-  // Pure sine wave — clean battle rope wave (não caótico)
-  function ry(t, baseY, amp, freq, phase) {
-    return baseY
-      + Math.sin(t * freq * Math.PI * 2 + phase) * amp
-      + Math.sin(t * freq * Math.PI * 4 + phase) * amp * 0.08; // harmônico suave para dar corpo
-  }
-
-  function drawRope(baseY, amp, freq, phase, colorMain, colorHi, colorShadow, thick) {
-    const W = canvas.width, STEPS = 220;
-    const pts = [];
-    for (let i = 0; i <= STEPS; i++) {
-      const t = i / STEPS;
-      pts.push({ x: t * W, y: ry(t, baseY, amp, freq, phase) });
-    }
-
-    // Drop shadow
-    ctx.beginPath();
-    ctx.lineWidth = thick + 8;
-    ctx.strokeStyle = 'rgba(0,0,0,0.50)';
-    ctx.lineJoin = 'round'; ctx.lineCap = 'round';
-    pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y + 6) : ctx.lineTo(p.x, p.y + 6));
-    ctx.stroke();
-
-    // Main body com gradiente lateral (efeito cilíndrico)
-    const grad = ctx.createLinearGradient(0, baseY - thick, 0, baseY + thick);
-    grad.addColorStop(0,   colorHi);
-    grad.addColorStop(0.3, colorMain);
-    grad.addColorStop(1,   colorShadow);
-    ctx.beginPath();
-    ctx.lineWidth = thick;
-    ctx.strokeStyle = grad;
-    ctx.lineJoin = 'round'; ctx.lineCap = 'round';
-    pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
-    ctx.stroke();
-
-    // Highlight fino (borda superior brilhante)
-    ctx.beginPath();
-    ctx.lineWidth = thick * 0.22;
-    ctx.strokeStyle = colorHi;
-    ctx.lineJoin = 'round'; ctx.lineCap = 'round';
-    const hi = thick * 0.30;
-    pts.forEach((p, i) => {
-      const prev = i > 0 ? pts[i-1] : pts[0];
-      const dx = p.x - prev.x, dy = p.y - prev.y;
-      const len = Math.sqrt(dx*dx + dy*dy) || 1;
-      const nx = -dy / len, ny = dx / len;
-      if (i === 0) ctx.moveTo(p.x + nx*hi, p.y + ny*hi);
-      else         ctx.lineTo(p.x + nx*hi, p.y + ny*hi);
-    });
-    ctx.stroke();
-
-    // Marcas de torção da corda (fibras) a cada ~18 px
-    let acc = 0;
-    for (let i = 1; i < pts.length; i++) {
-      const dx = pts[i].x - pts[i-1].x, dy = pts[i].y - pts[i-1].y;
-      acc += Math.sqrt(dx*dx + dy*dy);
-      if (acc >= 18) {
-        acc = 0;
-        const len = Math.sqrt(dx*dx + dy*dy) || 1;
-        const nx = -dy/len, ny = dx/len;
-        ctx.beginPath();
-        ctx.lineWidth = 1.5;
-        ctx.strokeStyle = colorShadow;
-        ctx.moveTo(pts[i].x + nx*thick*0.46, pts[i].y + ny*thick*0.46);
-        ctx.lineTo(pts[i].x - nx*thick*0.46, pts[i].y - ny*thick*0.46);
-        ctx.stroke();
-      }
-    }
-  }
-
-  function render() {
-    const W = canvas.width, H = canvas.height;
-    ctx.clearRect(0, 0, W, H);
-
-    // Background
-    const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
-    bgGrad.addColorStop(0,    'rgba(0,4,14,1)');
-    bgGrad.addColorStop(0.72, 'rgba(0,4,14,0.97)');
-    bgGrad.addColorStop(1,    'rgba(0,4,14,0)');
-    ctx.fillStyle = bgGrad;
-    ctx.fillRect(0, 0, W, H);
-
-    // Brilho atmosférico vermelho
-    const g1 = ctx.createRadialGradient(W*0.12, H*0.92, 0, W*0.12, H*0.92, W*0.60);
-    g1.addColorStop(0, 'rgba(21,101,192,0.42)');
-    g1.addColorStop(1, 'rgba(21,101,192,0)');
-    ctx.fillStyle = g1; ctx.fillRect(0, 0, W, H);
-
-    const g2 = ctx.createRadialGradient(W*0.85, H*0.08, 0, W*0.85, H*0.08, W*0.42);
-    g2.addColorStop(0, 'rgba(21,101,192,0.22)');
-    g2.addColorStop(1, 'rgba(21,101,192,0)');
-    ctx.fillStyle = g2; ctx.fillRect(0, 0, W, H);
-
-    // Duas battle ropes sincronizadas — mesma fase, lado a lado
-    const cY  = H * 0.57;
-    const sep = Math.min(H * 0.035, 26);   // separação entre as cordas
-    const amp = Math.min(H * 0.12, 75);
-    const freq = 2.2;                       // ondas por comprimento (natural para battle rope)
-    const phase = time * 0.11;             // velocidade — ~1.1 Hz a 60fps (ritmo de exercício)
-
-    // Corda de cima
-    drawRope(cY - sep, amp, freq, phase,
-      'rgba(21,101,192,0.97)', 'rgba(66,165,245,0.70)', 'rgba(8,32,80,0.90)', 20);
-    // Corda de baixo — MESMA fase (sincronizadas)
-    drawRope(cY + sep, amp, freq, phase,
-      'rgba(15,80,160,0.97)', 'rgba(50,140,230,0.65)', 'rgba(6,24,60,0.90)', 20);
-
-    // Top/bottom fade — keeps text readable
-    const tFade = ctx.createLinearGradient(0, 0, 0, H*0.38);
-    tFade.addColorStop(0, 'rgba(0,4,14,0.96)');
-    tFade.addColorStop(1, 'rgba(0,4,14,0)');
-    ctx.fillStyle = tFade; ctx.fillRect(0, 0, W, H*0.38);
-
-    const bFade = ctx.createLinearGradient(0, H*0.62, 0, H);
-    bFade.addColorStop(0, 'rgba(0,4,14,0)');
-    bFade.addColorStop(1, 'rgba(0,4,14,0.96)');
-    ctx.fillStyle = bFade; ctx.fillRect(0, H*0.62, W, H*0.38);
-
-    time++;
-    raf = requestAnimationFrame(render);
-  }
-
-  function start() {
-    if (running) return; running = true;
-    resize(); render();
-  }
-  function stop() {
-    running = false;
-    if (raf) { cancelAnimationFrame(raf); raf = null; }
-  }
-
-  window.addEventListener('resize', resize);
-
-  const obs = new IntersectionObserver(
-    entries => entries[0].isIntersecting ? start() : stop(),
-    { threshold: 0.05 }
-  );
-  obs.observe(section);
-})();
+// (Battle Ropes Canvas removed — #metodo replaced with photo-fan card)
 
 // ── Parallax Floating Images (dark-cta) ─────────────────
 (function () {
