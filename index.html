@@ -31,6 +31,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <!-- Tailwind compilado e otimizado (substitui CDN) -->
 <link rel="stylesheet" href="style.css"/>
+<!-- Flatpickr date picker -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"/>
 <style>
   * { box-sizing: border-box; }
   body { font-family: 'Inter', sans-serif; background: #080c14; color: #ffffff; }
@@ -581,6 +583,134 @@
     background: #111a2e;
     color: #fff;
   }
+
+  /* ── Flatpickr dark theme ── */
+  .flatpickr-calendar {
+    background: #111a2e !important;
+    border: 1px solid rgba(255,255,255,0.12) !important;
+    border-radius: 1rem !important;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.55) !important;
+    color: #fff !important;
+  }
+  .flatpickr-calendar.arrowTop::before,
+  .flatpickr-calendar.arrowTop::after { border-bottom-color: #111a2e !important; }
+  .flatpickr-calendar.arrowBottom::before,
+  .flatpickr-calendar.arrowBottom::after { border-top-color: #111a2e !important; }
+  .flatpickr-months { padding: 6px 0 4px; }
+  .flatpickr-months .flatpickr-month,
+  .flatpickr-current-month,
+  .flatpickr-monthDropdown-months,
+  .flatpickr-months .flatpickr-prev-month,
+  .flatpickr-months .flatpickr-next-month {
+    color: #fff !important;
+    fill: #fff !important;
+  }
+  .flatpickr-months .flatpickr-prev-month:hover svg,
+  .flatpickr-months .flatpickr-next-month:hover svg { fill: #60a5fa !important; }
+  .flatpickr-current-month input.cur-year { color: #fff !important; }
+  .flatpickr-weekdays { background: transparent !important; }
+  span.flatpickr-weekday {
+    background: transparent !important;
+    color: rgba(255,255,255,0.45) !important;
+    font-weight: 700;
+    font-size: 0.72rem;
+  }
+  .flatpickr-days { border-color: rgba(255,255,255,0.07) !important; }
+  .flatpickr-day {
+    color: #e2e8f0 !important;
+    border-radius: 0.5rem !important;
+  }
+  .flatpickr-day:hover, .flatpickr-day:focus {
+    background: rgba(21,101,192,0.25) !important;
+    border-color: transparent !important;
+  }
+  .flatpickr-day.selected, .flatpickr-day.selected:hover {
+    background: #1565c0 !important;
+    border-color: #1565c0 !important;
+    color: #fff !important;
+    box-shadow: 0 2px 12px rgba(21,101,192,0.45) !important;
+  }
+  .flatpickr-day.today { border-color: rgba(21,101,192,0.6) !important; }
+  .flatpickr-day.today:hover { background: rgba(21,101,192,0.2) !important; }
+  .flatpickr-day.flatpickr-disabled, .flatpickr-day.flatpickr-disabled:hover {
+    color: rgba(255,255,255,0.2) !important;
+    background: transparent !important;
+  }
+  .flatpickr-day.prevMonthDay, .flatpickr-day.nextMonthDay {
+    color: rgba(255,255,255,0.18) !important;
+  }
+  .numInputWrapper span.arrowUp::after { border-bottom-color: rgba(255,255,255,0.5) !important; }
+  .numInputWrapper span.arrowDown::after { border-top-color: rgba(255,255,255,0.5) !important; }
+
+  /* ── Time slot custom picker ── */
+  #time-picker-trigger {
+    position: relative;
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: border-color 0.2s, background 0.2s;
+    user-select: none;
+  }
+  #time-picker-trigger:hover,
+  #time-picker-trigger.open {
+    border-color: #1565c0;
+    background: rgba(255,255,255,0.09);
+  }
+  #time-picker-trigger .tp-placeholder { color: rgba(255,255,255,0.38); }
+  #time-picker-trigger .tp-value { color: #fff; font-weight: 600; }
+  #time-picker-dropdown {
+    position: absolute;
+    z-index: 9999;
+    left: 0; right: 0;
+    top: calc(100% + 6px);
+    background: #111a2e;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 1rem;
+    padding: 1rem;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  #time-picker-dropdown.hidden { display: none !important; }
+  #time-picker-dropdown .tp-no-date {
+    color: rgba(255,255,255,0.45);
+    font-size: 0.85rem;
+    width: 100%;
+    text-align: center;
+    padding: 0.5rem 0;
+  }
+  #time-picker-dropdown .tp-slot {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 0.5rem;
+    color: #e2e8f0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  #time-picker-dropdown .tp-slot:hover {
+    background: rgba(21,101,192,0.25);
+    border-color: rgba(21,101,192,0.5);
+    color: #fff;
+  }
+  #time-picker-dropdown .tp-slot.selected {
+    background: #1565c0;
+    border-color: #1565c0;
+    color: #fff;
+    box-shadow: 0 2px 10px rgba(21,101,192,0.4);
+  }
+  #time-picker-wrap { position: relative; }
 
   /* ── Badge pulsante ── */
   .pulse-badge {
@@ -2016,18 +2146,29 @@
           <p id="erro-nome" class="hidden text-xs mt-2 font-semibold" style="color:#f87171;">Digite seu nome completo (mínimo 2 palavras).</p>
         </div>
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-2">Melhor Horário</label>
-          <select id="form-horario" class="w-full bg-surface-container-low border-none rounded-lg p-4 text-on-surface focus:ring-2 focus:ring-primary outline-none transition-all">
-            <option>Seg–Sex – 06h</option>
-            <option>Seg–Sex – 07h</option>
-            <option>Seg–Sex – 12h</option>
-            <option>Seg–Sex – 16:30</option>
-            <option>Seg–Sex – 17:30</option>
-            <option>Seg–Sex – 18:30</option>
-            <option>Seg–Sex – 19:30</option>
-            <option>Sábado – 09h (Aulão)</option>
-            <option>Domingo – 09h (2x por mês)</option>
-          </select>
+          <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-2" for="form-data">Data da Aula</label>
+          <div class="relative">
+            <input id="form-data" type="text" readonly placeholder="Selecione uma data" autocomplete="off"
+              class="w-full bg-surface-container-low border-none rounded-lg p-4 text-on-surface focus:ring-2 focus:ring-primary outline-none transition-all placeholder:text-on-surface-variant/50 cursor-pointer pr-12"/>
+            <span class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" style="color:rgba(255,255,255,0.45);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </span>
+          </div>
+          <p id="erro-data" class="hidden text-xs mt-2 font-semibold" style="color:#f87171;">Selecione uma data para a aula.</p>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-2">Horário</label>
+          <div id="time-picker-wrap">
+            <div id="time-picker-trigger" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+              <span id="time-display" class="tp-placeholder">Selecione um horário</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:rgba(255,255,255,0.45);"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <input id="form-horario" type="hidden"/>
+            <div id="time-picker-dropdown" class="hidden" role="listbox">
+              <span class="tp-no-date">Selecione primeiro uma data</span>
+            </div>
+          </div>
+          <p id="erro-horario" class="hidden text-xs mt-2 font-semibold" style="color:#f87171;">Selecione um horário para a aula.</p>
         </div>
         <button type="submit" id="form-submit-btn" class="btn-photo w-full justify-center text-base mt-8">
           <span id="form-btn-label" class="ph-label">Quero agendar minha aula</span>
@@ -2276,30 +2417,165 @@
 // ── WhatsApp number — atualize aqui ──────────────────
 const WA_NUMBER = '5516991336272';
 
+// ── Date picker (Flatpickr) ───────────────────────────
+const TIME_SLOTS = {
+  weekday:  ['06h', '07h', '12h', '16:30', '17:30', '18:30', '19:30'],
+  saturday: ['09h (Aulão)'],
+  sunday:   ['09h (2x por mês)'],
+};
+
+function getDayType(date) {
+  const dow = date.getDay(); // 0=Sun,6=Sat
+  if (dow === 6) return 'saturday';
+  if (dow === 0) return 'sunday';
+  return 'weekday';
+}
+
+function renderTimeSlots(date) {
+  const dropdown = document.getElementById('time-picker-dropdown');
+  dropdown.innerHTML = '';
+  if (!date) {
+    dropdown.innerHTML = '<span class="tp-no-date">Selecione primeiro uma data</span>';
+    return;
+  }
+  const slots = TIME_SLOTS[getDayType(date)];
+  const currentVal = document.getElementById('form-horario').value;
+  slots.forEach(slot => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'tp-slot' + (slot === currentVal ? ' selected' : '');
+    btn.setAttribute('role', 'option');
+    btn.setAttribute('aria-selected', slot === currentVal ? 'true' : 'false');
+    btn.textContent = slot;
+    btn.addEventListener('click', () => selectTimeSlot(slot));
+    dropdown.appendChild(btn);
+  });
+}
+
+function selectTimeSlot(slot) {
+  document.getElementById('form-horario').value = slot;
+  const display = document.getElementById('time-display');
+  display.textContent = slot;
+  display.className = 'tp-value';
+  document.getElementById('erro-horario').classList.add('hidden');
+  document.getElementById('time-picker-trigger').style.boxShadow = '';
+  // refresh selection highlight
+  document.querySelectorAll('#time-picker-dropdown .tp-slot').forEach(b => {
+    const isSel = b.textContent === slot;
+    b.classList.toggle('selected', isSel);
+    b.setAttribute('aria-selected', isSel ? 'true' : 'false');
+  });
+  closeTimePicker();
+}
+
+function openTimePicker() {
+  const dropdown = document.getElementById('time-picker-dropdown');
+  const trigger  = document.getElementById('time-picker-trigger');
+  dropdown.classList.remove('hidden');
+  trigger.classList.add('open');
+  trigger.setAttribute('aria-expanded', 'true');
+}
+
+function closeTimePicker() {
+  const dropdown = document.getElementById('time-picker-dropdown');
+  const trigger  = document.getElementById('time-picker-trigger');
+  dropdown.classList.add('hidden');
+  trigger.classList.remove('open');
+  trigger.setAttribute('aria-expanded', 'false');
+}
+
+(function initDateTimePickers() {
+  // Init Flatpickr
+  flatpickr('#form-data', {
+    locale: 'pt',
+    minDate: 'today',
+    dateFormat: 'd/m/Y',
+    disableMobile: false,
+    onChange(selectedDates) {
+      // reset time selection when date changes
+      document.getElementById('form-horario').value = '';
+      const display = document.getElementById('time-display');
+      display.textContent = 'Selecione um horário';
+      display.className = 'tp-placeholder';
+      document.getElementById('erro-data').classList.add('hidden');
+      document.getElementById('form-data').style.boxShadow = '';
+      renderTimeSlots(selectedDates[0] || null);
+    },
+  });
+
+  // Time picker toggle
+  const trigger = document.getElementById('time-picker-trigger');
+  trigger.addEventListener('click', () => {
+    const isOpen = !document.getElementById('time-picker-dropdown').classList.contains('hidden');
+    if (isOpen) { closeTimePicker(); } else { openTimePicker(); }
+  });
+  trigger.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); trigger.click(); }
+    if (e.key === 'Escape') { closeTimePicker(); }
+  });
+
+  // Close on outside click
+  document.addEventListener('click', (e) => {
+    if (!document.getElementById('time-picker-wrap').contains(e.target)) {
+      closeTimePicker();
+    }
+  });
+})();
+
 
 // ── Form → abre WhatsApp com mensagem pré-preenchida ─
 function enviarWhatsApp(e) {
   e.preventDefault();
 
-  const nomeEl   = document.getElementById('form-nome');
-  const erroNome = document.getElementById('erro-nome');
-  const nome     = nomeEl.value.trim();
-  const horario  = document.getElementById('form-horario').value;
+  const nomeEl    = document.getElementById('form-nome');
+  const dataEl    = document.getElementById('form-data');
+  const erroNome  = document.getElementById('erro-nome');
+  const erroData  = document.getElementById('erro-data');
+  const erroHora  = document.getElementById('erro-horario');
+  const nome      = nomeEl.value.trim();
+  const data      = dataEl.value.trim();
+  const horario   = document.getElementById('form-horario').value;
+
+  let valid = true;
 
   // Validação: mínimo 2 palavras
   const nomeOk = /^[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ'\- ]{1,}(\s[A-Za-zÀ-ÿ'\-]{1,})+$/.test(nome);
   if (!nomeOk) {
     erroNome.classList.remove('hidden');
     nomeEl.style.boxShadow = '0 0 0 2px #f87171';
-    return;
+    valid = false;
+  } else {
+    erroNome.classList.add('hidden');
+    nomeEl.style.boxShadow = '';
   }
-  erroNome.classList.add('hidden');
-  nomeEl.style.boxShadow = '';
+
+  // Validação: data obrigatória
+  if (!data) {
+    erroData.classList.remove('hidden');
+    dataEl.style.boxShadow = '0 0 0 2px #f87171';
+    valid = false;
+  } else {
+    erroData.classList.add('hidden');
+    dataEl.style.boxShadow = '';
+  }
+
+  // Validação: horário obrigatório
+  if (!horario) {
+    erroHora.classList.remove('hidden');
+    document.getElementById('time-picker-trigger').style.boxShadow = '0 0 0 2px #f87171';
+    valid = false;
+  } else {
+    erroHora.classList.add('hidden');
+    document.getElementById('time-picker-trigger').style.boxShadow = '';
+  }
+
+  if (!valid) return;
 
   // ── Monta mensagem e abre WhatsApp ─────────────────
   const msg =
     `Oi! Meu nome é *${nome}* e gostaria de agendar minha primeira aula gratuita no Cross Lion.\n\n` +
-    `📅 Prefiro o horário: *${horario}*`;
+    `📅 Data: *${data}*\n` +
+    `⏰ Horário: *${horario}*`;
   window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
 
   // ── Botão vira verde "Agendamento enviado!" ─────────
@@ -2320,8 +2596,15 @@ function enviarWhatsApp(e) {
     btn.classList.remove('sent');
     label.textContent = 'Quero agendar minha aula';
     arrow.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>`;
+    // Reset fields
     document.getElementById('form-nome').value = '';
-    document.getElementById('form-horario').selectedIndex = 0;
+    const fpInstance = document.querySelector('#form-data')._flatpickr;
+    if (fpInstance) fpInstance.clear();
+    document.getElementById('form-horario').value = '';
+    const display = document.getElementById('time-display');
+    display.textContent = 'Selecione um horário';
+    display.className = 'tp-placeholder';
+    renderTimeSlots(null);
   }, 5000);
 }
 
@@ -2977,6 +3260,10 @@ window.addEventListener('scroll', () => {
   setTimeout(() => { calcThresholds(); initMobileCards(); update(); }, 150);
 })();
 </script>
+
+<!-- Flatpickr JS + Brazilian Portuguese locale -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
 
 <!-- Floating WhatsApp CTA (mobile/tablet) -->
 <a id="wa-float" href="https://wa.me/5516991336272" target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp">
