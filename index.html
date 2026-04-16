@@ -2506,6 +2506,10 @@
   </div><!-- /footer-inner -->
 </footer>
 
+<!-- Flatpickr JS + Brazilian Portuguese locale (must load before main script block) -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
+
 <script>
 // ── Mobile menu toggle ───────────────────────────────
 (function () {
@@ -3240,10 +3244,6 @@ window.addEventListener('scroll', () => {
   setTimeout(() => { calcThresholds(); initMobileCards(); update(); }, 150);
 })();
 </script>
-
-<!-- Flatpickr JS + Brazilian Portuguese locale -->
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
 
 <!-- Floating WhatsApp CTA (mobile/tablet) -->
 <a id="wa-float" href="https://wa.me/5516991336272" target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp">
