@@ -159,7 +159,7 @@
     #hero .flex.flex-col { margin-bottom: 1.25rem !important; }
   }
   #hero-bg-img { position: absolute; inset: 0; z-index: 0; }
-  #hero-bg-img img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+  #hero-bg-img img, #hero-bg-img video { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
 
   /* ── Raios de luz diagonais no Hero ── */
   #hero-rays {
@@ -1568,7 +1568,9 @@
 <section id="hero" class="relative overflow-hidden">
   <!-- Full-bleed background image -->
   <div id="hero-bg-img" aria-hidden="true">
-    <img src="https://placehold.co/1920x1080/1a1a2e/333355" alt="Cross Lion — academia de crossfit e cross training em Ribeirão Preto" style="object-position: 63% top;"/>
+    <video id="hero-bg-video" autoplay muted loop playsinline>
+      <source src="video/freepik_positive-prompta-highly-athletic-blonde-woman-perf_seedance_720p_16-9_24fps_28578.mp4" type="video/mp4"/>
+    </video>
   </div>
   <!-- Raios de luz diagonais -->
   <div id="hero-rays" aria-hidden="true">
@@ -1670,7 +1672,7 @@
   <div class="cx" style="position:relative;z-index:1;">
 
     <!-- ── Lime-green card ── -->
-    <div style="background:#93FF06;border-radius:20px;position:relative;overflow:visible;text-align:center;padding:200px 40px 220px;">
+    <div style="background:linear-gradient(135deg,#1e6fd9 0%,#0d47a1 100%);border-radius:20px;position:relative;overflow:visible;text-align:center;padding:200px 40px 220px;">
 
       <!-- ── Photo fan row: bottoms aligned, arc via margin-bottom ── -->
       <div id="metodo-photos" style="position:absolute;bottom:calc(100% - 80px);left:50%;transform:translateX(-50%);display:flex;align-items:flex-end;justify-content:center;">
@@ -1783,17 +1785,13 @@
 
       <!-- ── Central text ── -->
       <div style="max-width:540px;margin:0 auto;">
-        <span style="font-size:0.6875rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(0,0,0,0.50);display:block;margin-bottom:16px;">O Método Cross Lion</span>
-        <h2 style="font-family:'Hanken Grotesk',sans-serif;font-size:clamp(1.9rem,3.6vw,2.75rem);font-weight:800;line-height:1.1;color:#0a0a0a;margin:0 0 20px;letter-spacing:-0.02em;">Aqui, seu treino se torna<br/>resultado de verdade.</h2>
-        <p style="font-size:1.05rem;color:rgba(0,0,0,0.60);max-width:460px;margin:0 auto;line-height:1.7;">Nossa estrutura é desenhada para remover todas as barreiras entre você e sua melhor versão.</p>
+        <span style="font-size:0.6875rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.65);display:block;margin-bottom:16px;">O Método Cross Lion</span>
+        <h2 style="font-family:'Hanken Grotesk',sans-serif;font-size:clamp(1.9rem,3.6vw,2.75rem);font-weight:800;line-height:1.1;color:#ffffff;margin:0 0 20px;letter-spacing:-0.02em;">Aqui, seu treino se torna<br/>resultado de verdade.</h2>
+        <p style="font-size:1.05rem;color:rgba(255,255,255,0.75);max-width:460px;margin:0 auto;line-height:1.7;">Nossa estrutura é desenhada para remover todas as barreiras entre você e sua melhor versão.</p>
       </div>
 
-      <!-- ── Bottom: lion video (swap <img> for <video> once leao-rugindo.mp4 is in /video/) ── -->
       <div id="metodo-lion" style="position:absolute;bottom:-80px;left:50%;transform:translateX(-50%);width:200px;pointer-events:none;" aria-hidden="true">
-        <video autoplay muted loop playsinline style="width:100%;display:none;" id="metodo-lion-video">
-          <source src="video/leao-rugindo.mp4" type="video/mp4"/>
-        </video>
-        <img src="img/logo_lion.svg" alt="" id="metodo-lion-img" style="width:100%;display:block;"/>
+        <img src="img/Logo _cros_lion.svg" alt="" style="width:100%;display:block;"/>
       </div>
 
     </div><!-- /lime-green card -->
@@ -2538,16 +2536,14 @@
   });
 })();
 
-// ── Lion video: show when available, hide static fallback ──
+// ── Hero background video: slow-motion playback ──
 (function () {
-  const vid = document.getElementById('metodo-lion-video');
-  const img = document.getElementById('metodo-lion-img');
-  if (!vid || !img) return;
-  vid.addEventListener('canplay', function onCanPlay() {
-    vid.style.display = 'block';
-    img.style.display = 'none';
-    vid.removeEventListener('canplay', onCanPlay);
-  }, { once: true });
+  const vid = document.getElementById('hero-bg-video');
+  if (!vid) return;
+  vid.playbackRate = 0.5;
+  vid.addEventListener('ratechange', function () {
+    if (vid.playbackRate !== 0.5) vid.playbackRate = 0.5;
+  });
 })();
 
 // ── WhatsApp number — atualize aqui ──────────────────
