@@ -160,10 +160,12 @@
   }
   #hero-bg-img { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
   #hero-bg-img video {
-    position: absolute; top: 0; right: 0; bottom: 0;
-    width: 62%; height: 100%;
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    width: 100%; height: 100%;
     object-fit: cover; object-position: center top;
     transform: scaleX(-1);
+    -webkit-mask-image: linear-gradient(to left, transparent 0%, black 52%);
+    mask-image: linear-gradient(to left, transparent 0%, black 52%);
   }
 
   /* ── Raios de luz diagonais no Hero ── */
@@ -192,15 +194,11 @@
   #hero-overlay-left {
     position: absolute; inset: 0; z-index: 1; pointer-events: none;
     background: linear-gradient(to right,
-      #080c14 0%,
-      #080c14 12%,
-      rgba(8,12,20,0.95) 22%,
-      rgba(8,12,20,0.82) 32%,
-      rgba(8,12,20,0.60) 44%,
-      rgba(8,12,20,0.35) 56%,
-      rgba(8,12,20,0.14) 67%,
-      rgba(8,12,20,0.03) 76%,
-      transparent 85%);
+      rgba(8,12,20,0.88) 0%,
+      rgba(8,12,20,0.72) 22%,
+      rgba(8,12,20,0.38) 42%,
+      rgba(8,12,20,0.10) 58%,
+      transparent 72%);
   }
   #hero-overlay-bottom {
     position: absolute; bottom: 0; left: 0; right: 0; height: 55%; z-index: 1; pointer-events: none;
