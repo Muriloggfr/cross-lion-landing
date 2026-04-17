@@ -601,6 +601,8 @@
   .metodo-photo-arc:hover { z-index: 50 !important; }
   .metodo-photo-card {
     position: relative;
+    overflow: hidden;
+    border-radius: 13px;
     transition: transform 0.2s ease;
     cursor: default;
   }
@@ -609,9 +611,8 @@
   }
   .metodo-photo-label {
     position: absolute;
-    top: 100%; left: 0; right: 0;
+    bottom: 0; left: 0; right: 0;
     background: #fff;
-    border-radius: 0 0 13px 13px;
     padding: 6px 4px;
     opacity: 0;
     transition: opacity 0.2s ease;
