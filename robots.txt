@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://box3008.com.br/sitemap.xml
+Sitemap: https://crosslion.com.br/sitemap.xml

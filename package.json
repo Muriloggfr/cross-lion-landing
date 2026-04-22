@@ -4,8 +4,9 @@
   "description": "Landing page Cross Lion - Ribeirão Preto, SP",
   "main": "index.js",
   "scripts": {
-    "build:css": "tailwindcss -i input.css -o style.css --minify",
-    "watch:css": "tailwindcss -i input.css -o style.css --watch"
+    "build:css": "tailwindcss -i input.css -o dist/output.css --minify",
+    "watch:css": "tailwindcss -i input.css -o style.css --watch",
+    "optimize:videos": "node scripts/optimize-videos.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,10 @@
   "devDependencies": {
     "@tailwindcss/cli": "^4.2.2",
     "@tailwindcss/forms": "^0.5.11",
+    "html-validate": "^10.13.1",
     "tailwindcss": "^4.2.2"
+  },
+  "dependencies": {
+    "sharp": "^0.34.5"
   }
 }
